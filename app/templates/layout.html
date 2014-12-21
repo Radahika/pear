@@ -1,9 +1,8 @@
 <!doctype html>
 <html>
   <head>
-    {% block head %}
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
     <meta charset="utf-8">
-
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -15,15 +14,30 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-    <title>{% block title %}{% endblock %} – Housemates</title>
-    {% endblock %}
+    {% if title %}
+    <title>{{ title }} - Housemates</title>
+    {% else %}
+    <title>Housemates</title>
+    {% endif %}
   </head>
   <body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
-      {% block footer %}
-      Fill in Bottom Text
-      {% endblock %}
+    <div>Housemates:
+        <a href="{{ url_for('index') }}">Home</a>
+        {% if g.user.is_authenticated() %}
+        | <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
     </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
   </body>
 </html>
+
