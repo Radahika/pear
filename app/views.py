@@ -1,8 +1,10 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, abort, make_response, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.httpauth import HTTPBasicAuth
 from app import app, db, lm, oid
 from .forms import LoginForm
 from .models import User
+
 
 @lm.user_loader
 def load_user(id):
@@ -19,13 +21,33 @@ def index():
     user = g.user
     return render_template('index.html',title='Home',user=user)
 
-@app.route('/chores')
+@app.route('/home')
 def home():
-    user = g.user
-    return render_template('chores.html', title='Chores',user=user)
+    return 'Hello World'
 
 #start api test
-chores = [
+auth = HTTPBasicAuth()
+
+@auth.get_password
+def get_password(username):
+    if username == 'miguel':
+        return 'python'
+    return None
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
+    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
+
+@app.errorhandler(400)
+def not_found(error):
+    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify( { 'error': 'Not found' } ), 404)
+
+tasks = [
     {
         'id': 1,
         'title': u'Buy groceries',
@@ -34,40 +56,53 @@ chores = [
     },
     {
         'id': 2,
-        'title': u'Clean Bathroom',
-        'description': u'Need to clean toilet and bathtub.',
+        'title': u'Learn Python',
+        'description': u'Need to find a good Python tutorial on the web',
         'done': False
     }
 ]
 
-@app.route('/todo/api/v1.0/chores', methods=['GET'])
-def get_chores():
-    return jsonify({'chores': map(make_public_chore, chores)})
+def make_public_task(task):
+    new_task = {}
+    for field in task:
+        if field == 'id':
+            new_task['uri'] = url_for('get_task', task_id = task['id'], _external = True)
+        else:
+            new_task[field] = task[field]
+    return new_task
 
-@app.route('/todo/api/v1.0/chores/<int:chore_id>', methods=['GET'])
-def get_chore(chore_id):
-    chore = filter(lambda t: t['id'] == chore_id, chores)
-    if len(chore) == 0:
+@app.route('/todo/api/v1.0/tasks', methods = ['GET'])
+@auth.login_required
+def get_tasks():
+    return jsonify( { 'tasks': map(make_public_task, tasks) } )
+
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['GET'])
+@auth.login_required
+def get_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    if len(task) == 0:
         abort(404)
-    return jsonify({'chore':chore[0]})
+    return jsonify( { 'task': make_public_task(task[0]) } )
 
-@app.route('/todo/api/v1.0/chores', methods=['POST'])
-def create_chore():
+@app.route('/todo/api/v1.0/tasks', methods = ['POST'])
+@auth.login_required
+def create_task():
     if not request.json or not 'title' in request.json:
         abort(400)
-    chore = {
-            'id': chores[-1]['id'] + 1,
-            'title': request.json['title'],
-            'description': request.json.get('description', ""),
-            'done': False
-        }
-    chores.append(chore)
-    return jsonify({'chore': chore}), 201
+    task = {
+        'id': tasks[-1]['id'] + 1,
+        'title': request.json['title'],
+        'description': request.json.get('description', ""),
+        'done': False
+    }
+    tasks.append(task)
+    return jsonify( { 'task': make_public_task(task) } ), 201
 
-@app.route('/todo/api/v1.0/chores/<int:chore_id>', methods=['PUT'])
-def update_chore(chore_id):
-    chore = filter(lambda t: t['id'] == chore_id, chores)
-    if len(chore) == 0:
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['PUT'])
+@auth.login_required
+def update_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    if len(task) == 0:
         abort(404)
     if not request.json:
         abort(400)
@@ -77,32 +112,19 @@ def update_chore(chore_id):
         abort(400)
     if 'done' in request.json and type(request.json['done']) is not bool:
         abort(400)
-    chore[0]['title'] = request.json.get('title', chore[0]['title'])
-    chore[0]['description'] = request.json.get('description', chore[0]['description'])
-    chore[0]['done'] = request.json.get('done', chore[0]['done'])
-    return jsonify({'chore': chore[0]})
+    task[0]['title'] = request.json.get('title', task[0]['title'])
+    task[0]['description'] = request.json.get('description', task[0]['description'])
+    task[0]['done'] = request.json.get('done', task[0]['done'])
+    return jsonify( { 'task': make_public_task(task[0]) } )
 
-@app.route('/todo/api/v1.0/chores/<int:chore_id>', methods=['DELETE'])
-def delete_chore(chore_id):
-    chore = filter(lambda t: t['id'] == chore_id, chores)
-    if len(chore) == 0:
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['DELETE'])
+@auth.login_required
+def delete_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    if len(task) == 0:
         abort(404)
-    chores.remove(chore[0])
-    return jsonify({'result': True})
-
-def make_public_chore(chore):
-    new_chore = {}
-    for field in chore:
-        if field == 'id':
-            new_chore['uri'] = url_for('get_chore', chore_id=chore['id'], _external=True)
-        else:
-            new_chore[field] = chore[field]
-    return new_chore
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
-
+    tasks.remove(task[0])
+    return jsonify( { 'result': True } )
 #end api test
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -148,3 +170,10 @@ def settings():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/chores')
+@login_required
+def chores():
+    user = g.user
+    return render_template('chores.html',title='Chores',user=user)
+
