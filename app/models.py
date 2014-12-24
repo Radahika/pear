@@ -1,11 +1,23 @@
 from app import db
 
+followers = db.Table(
+        'followers',
+        db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+        db.Column('follower_id', db.Integer, db.ForeignKey('user.id'))
+        )
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username  = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     house = db.relationship('House', uselist=False, backref='user')
     chores = db.relationship('Chore', backref='author', lazy='dynamic')
+    followed = db.relationship('User',
+                               secondary=followers,
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.followed_id == id),
+                               backref=db.backref('followers', lazy='dynamic'),
+                               lazy='dynamic')
 
     def is_authenticated(self):
         return True
@@ -51,3 +63,4 @@ class Chore(db.Model):
 
     def __repr__(self):
         return '<Chore %r, Complete: %r>' % (self.title, self.status)
+
