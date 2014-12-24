@@ -4,7 +4,6 @@ from flask.ext.httpauth import HTTPBasicAuth
 from app import app, db, lm, oid
 from .forms import LoginForm
 from .models import User
-import requests
 
 
 @lm.user_loader
