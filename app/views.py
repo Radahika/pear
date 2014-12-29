@@ -180,6 +180,21 @@ def chores():
     user = g.user
     return render_template('chores.html',title='Chores',user=user)
 
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first()
+    if user == None:
+        flash('User %s not found.' % username)
+        return redirect(url_for('index'))
+    chores = [
+            {'author': user, 'title': 'Buy milk'},
+            {'author': user, 'title': 'Get kisses from Kevin'}
+            ]
+    return render_template('user.html',
+                            user=user,
+                            chores=chores)
+
 @app.route('/follow/<username>')
 @login_required
 def follow(username):

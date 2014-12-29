@@ -2,5 +2,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>This page still needs to be designed</h1>
-{% endblock %}
+<h1>User: {{ user.username }}!</h1>
+<p> Don't you have chores to do? </p>
+{% include 'chores.html' %}
+<p>{% endblock %}
