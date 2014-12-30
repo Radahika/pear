@@ -195,6 +195,11 @@ def user(username):
                             user=user,
                             chores=chores)
 
+@app.route('/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+    form = EditForm(g.user.username)
+
 @app.route('/follow/<username>')
 @login_required
 def follow(username):
@@ -232,4 +237,14 @@ def unfollow(username):
     db.session.commit()
     flash('You have stopped following ' + username + '.')
     return redirect(url_for('user', username=username))
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
+
 

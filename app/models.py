@@ -34,6 +34,18 @@ class User(db.Model):
         except NameError:
             return str(self.id) # python 3
 
+    @staticmethod
+    def make_unique_username(username):
+        if User.query.filter_by(username=username).first() is None:
+            return username
+        version = 2
+        while True:
+            new_username = username + str(version)
+            if User.query.filter_by(username=new_username).first() is None:
+                break
+            version += 1
+        return new_username
+
     def follow(self, user):
         if not self.is_following(user):
             self.followed.append(user)

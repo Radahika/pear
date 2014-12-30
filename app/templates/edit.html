@@ -1,0 +1,7 @@
+<td> Your username:</td>
+<td>
+    {{ form.username(size=24) }}
+    {% for error in form.errors.username %}
+    <br><span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+</td>
