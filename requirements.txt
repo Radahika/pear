@@ -31,3 +31,4 @@ sqlalchemy-migrate==0.9.2
 sqlparse==0.1.11
 Flask-HTTPAuth==2.3.0
 requests==2.3.0
+passlib==1.6.2

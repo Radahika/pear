@@ -14,6 +14,7 @@ flask/bin/pip install flask-wtf
 flask/bin/pip install flask-babel
 flask/bin/pip install guess_language
 flask/bin/pip install flipflop
+flask/bin/pip install passlib
 flask/bin/pip install coverage
 flask/bin/pip install flask-httpauth
 flask/bin/pip install gunicorn

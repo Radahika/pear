@@ -1,10 +1,9 @@
-from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, abort, make_response, request
+from flask import Flask, render_template, flash, redirect, session, url_for, request, g, jsonify, abort, make_response, request, json
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.httpauth import HTTPBasicAuth
 from app import app, db, lm, oid
 from .forms import LoginForm
-from .models import User
-
+from .models import User, Chore, House
 
 @lm.user_loader
 def load_user(id):
@@ -27,12 +26,6 @@ def home():
 
 #start api test
 auth = HTTPBasicAuth()
-
-@auth.get_password
-def get_password(username):
-    if username == 'miguel':
-        return 'python'
-    return None
 
 @auth.error_handler
 def unauthorized():
@@ -125,20 +118,78 @@ def delete_task(task_id):
         abort(404)
     tasks.remove(task[0])
     return jsonify( { 'result': True } )
-#end api test
 
+@auth.verify_password
+def verify_password(username_or_token, password):
+    # first try to authenticate by token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # try to authenticate with username/password
+        user = User.query.filter_by(username=username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+    g.user = user
+    return True
+
+@app.route('/api/v1.0/users', methods = ['POST'])
+def new_user():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    email = request.json.get('email')
+    test = User.query.filter_by(username=username)
+    if username is None or password is None or email is None:
+        abort(400) # missing arguments
+    if User.query.filter_by(username = username).first() is not None:
+        abort(400) # existing user
+    user = User(username=username, email=email)
+    user.hash_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({ 'username': user.username }), 201, {'Location': url_for('get_user', id = user.id, _external = True)}
+
+@app.route('/api/v1.0/users/<int:id>')
+def get_user(id):
+    user = User.query.get(id)
+    if not user:
+        abort(400)
+    return jsonify({'username': user.username})
+
+@app.route('/api/v1.0/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token(600)
+    return jsonify({'token': token.decode('ascii'), 'duration': 600})
+
+@app.route('/api/v1.0/resource')
+@auth.login_required
+def get_resource():
+    return jsonify({ 'data': 'Hello, %s!' %g.user.username })
+
+#end api test
+import pdb
 @app.route('/login', methods=['GET', 'POST'])
-@oid.loginhandler
 def login():
     if g.user is not None and g.user.is_authenticated():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        #login and validate the user
         session['remember_me'] = form.remember_me.data
+        username = form.data['username']
+        password = form.data['password']
         flash("Logged in successfully.")
-        return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
-    return render_template('login.html', title='Sign In', form=form, providers=app.config['OPENID_PROVIDERS'])
+    return render_template('login.html', title='Sign In', form=form)
+
+#@oid.loginhandler
+#def login():
+    #if g.user is not None and g.user.is_authenticated():
+        #return redirect(url_for('index'))
+    #form = LoginForm()
+    #if form.validate_on_submit():
+        ##login and validate the user
+        #session['remember_me'] = form.remember_me.data
+        #flash("Logged in successfully.")
+        #return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
+    #return render_template('login.html', title='Sign In', form=form, providers=app.config['OPENID_PROVIDERS'])
 
 @oid.after_login
 def after_login(resp):
