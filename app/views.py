@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, session, url_for, request, g, jsonify, abort, make_response, request, json
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.httpauth import HTTPBasicAuth
-from app import app, db, lm, oid
+from app import app, db, lm
 from .forms import LoginForm
 from .models import User, Chore, House
 
@@ -23,6 +23,10 @@ def index():
 @app.route('/home')
 def home():
     return 'Hello World'
+
+@app.route('/create')
+def create():
+    return render_template('create.html', title='Create an account')
 
 #start api test
 auth = HTTPBasicAuth()
@@ -173,10 +177,17 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
+        # login and validate the user...
         session['remember_me'] = form.remember_me.data
         username = form.data['username']
         password = form.data['password']
-        flash("Logged in successfully.")
+        result = verify_password(username, password)
+        pdb.set_trace()
+        if login_user(g.user) == True:
+            flash("Logged in successfully.")
+            return redirect(request.args.get("next") or url_for("index"))
+        else:
+            flash("Incorrect Login")
     return render_template('login.html', title='Sign In', form=form)
 
 #@oid.loginhandler
@@ -191,28 +202,27 @@ def login():
         #return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
     #return render_template('login.html', title='Sign In', form=form, providers=app.config['OPENID_PROVIDERS'])
 
-@oid.after_login
-def after_login(resp):
-    if resp.email is None or resp.email == "":
-        flash('Invalid login. Please try again.')
-        return redirect(url_for('login'))
-    user = User.query.filter_by(email=resp.email).first()
-    if user is None:
-        nickname = resp.nickname
-        if nickname is None or nickname == "":
-            nickname = resp.email.split('@')[0]
-        user = User(username=nickname, email=resp.email)
-        db.session.add(user)
-        db.session.commit()
-        # make the user follow him/herself
-        db.session.add(user.follow(user))
-        db.session.commit()
-    remember_me = False
-    if 'remember_me' in session:
-        remember_me = session['remember_me']
-        session.pop('remember_me', None)
-    login_user(user, remember=remember_me)
-    return redirect(request.args.get('next') or url_for('index'))
+#def after_login(resp):
+    #if resp.email is None or resp.email == "":
+        #flash('Invalid login. Please try again.')
+        #return redirect(url_for('login'))
+    #user = User.query.filter_by(email=resp.email).first()
+    #if user is None:
+        #nickname = resp.nickname
+        #if nickname is None or nickname == "":
+            #nickname = resp.email.split('@')[0]
+        #user = User(username=nickname, email=resp.email)
+        #db.session.add(user)
+        #db.session.commit()
+        ## make the user follow him/herself
+        #db.session.add(user.follow(user))
+        #db.session.commit()
+    #remember_me = False
+    #if 'remember_me' in session:
+        #remember_me = session['remember_me']
+        #session.pop('remember_me', None)
+    #login_user(user, remember=remember_me)
+    #return redirect(request.args.get('next') or url_for('index'))
 
 @app.route('/settings')
 @login_required
