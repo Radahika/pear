@@ -177,7 +177,7 @@ def get_user(id):
         abort(400)
     return jsonify({'username': user.username})
 
-@app.route('/api/v1.0/token')
+@app.route('/api/v1.0/login')
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token(600)
