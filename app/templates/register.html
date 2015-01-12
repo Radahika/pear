@@ -2,16 +2,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
+    <h1>Create a new account</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
         <p> {{ form.username }} Username </p>
         <p> {{ form.password }} Password </p>
-        <p>{{ form.remember_me }} Remember Me</p>
-        <p><input type="submit" value="Sign In"></p>
+        <p> {{ form.email }} Email </p>
+        <p> {{ form.house }} House </p>
+        <p><input type="submit" value="New Account"></p>
     </form>
-    <div>
-      <a href="{{ url_for('register') }}">Create a new account</a>
-    </div>
 {% endblock %}
 

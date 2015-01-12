@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, redirect, session, url_for, req
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.httpauth import HTTPBasicAuth
 from app import app, db, lm
-from .forms import LoginForm
+from .forms import LoginForm, CreateForm
 from .models import User, Chore, House
 
 @lm.user_loader
@@ -24,9 +24,29 @@ def index():
 def home():
     return 'Hello World'
 
-@app.route('/create')
-def create():
-    return render_template('create.html', title='Create an account')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('index'))
+    form = CreateForm()
+    #pdb.set_trace()
+    if form.validate_on_submit():
+        # create new account for user...
+        username = form.username.data
+        password = form.password.data
+        email = form.email.data
+        house = form.house.data
+        if username is None or password is None or email is None:
+            abort(400) # missing arguments
+        if User.query.filter_by(username=username).first() is not None:
+            abort(400) # existing user
+        user = User(username=username, email=email)
+        user.hash_password(password)
+        #pdb.set_trace()
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html', title='New Account', form=form)
 
 #start api test
 auth = HTTPBasicAuth()
@@ -140,7 +160,6 @@ def new_user():
     username = request.json.get('username')
     password = request.json.get('password')
     email = request.json.get('email')
-    test = User.query.filter_by(username=username)
     if username is None or password is None or email is None:
         abort(400) # missing arguments
     if User.query.filter_by(username = username).first() is not None:
@@ -179,15 +198,17 @@ def login():
     if form.validate_on_submit():
         # login and validate the user...
         session['remember_me'] = form.remember_me.data
-        username = form.data['username']
-        password = form.data['password']
+        #pdb.set_trace()
+        username = form.username.data
+        password = form.password.data
         result = verify_password(username, password)
-        pdb.set_trace()
-        if login_user(g.user) == True:
-            flash("Logged in successfully.")
+        #pdb.set_trace()
+        if result:
+            login_user(g.user, remember=session['remember_me'])
             return redirect(request.args.get("next") or url_for("index"))
         else:
             flash("Incorrect Login")
+            return render_template('login.html', title='Sign In', form=form)
     return render_template('login.html', title='Sign In', form=form)
 
 #@oid.loginhandler
