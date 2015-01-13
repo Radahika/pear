@@ -3,16 +3,16 @@
 
 {% block content %}
 <br>
-    <div class="login">
+    <div class="form-inputs">
       <h1><b>Welcome back!</b></h1>
         <form class="login-form" action="" method="post" name="login">
           <p>
             <span class="login-align"></span>
             <span class="fontawesome-user"></span>
-            <input class="login-input" type="text" name="username" value="" placeholder="Username" data-required="required">
+            <input class="text_field" type="text" name="username" value="" placeholder="Username" data-required="required">
           </p>
             <span class="fontawesome-lock"></span>
-            <input class="login-input" type="password" name="password" value="" placeholder="Password" data-required="required">
+            <input class="text_field" type="password" name="password" value="" placeholder="Password" data-required="required">
             <a href="{{ url_for('forgot_password') }}" class="forgot_password_link" tabindex="-1">
               <b class="question_mark">
                 <img src="{{ url_for('static', filename='question.png') }}" alt="question mark icon"/>
@@ -32,7 +32,7 @@
         </p>
   </div>
 
-  <p class="jump"><a href="#learn_more">Learn More about Housemates</a><p>
+  <p class="jump"><a  href="#learn_more">Learn More about Housemates</a>
 
   <a name="learn_more">
 {% endblock %}

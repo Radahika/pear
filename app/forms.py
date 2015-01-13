@@ -3,6 +3,9 @@ from wtforms import StringField, BooleanField, TextField, PasswordField
 from wtforms.validators import DataRequired
 from app.models import User
 
+class resetForm(Form):
+    email = StringField('email', validators=[DataRequired()])
+
 class LoginForm(Form):
     username = StringField('username', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
