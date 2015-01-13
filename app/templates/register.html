@@ -2,8 +2,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
+    <div class="register">
     <h1>Create a new account</h1>
-    <form action="" method="post" name="login">
+    <form action="" method="post" name="register">
         {{ form.hidden_tag() }}
         <p> {{ form.username }} Username </p>
         <p> {{ form.password }} Password </p>
@@ -11,5 +12,6 @@
         <p> {{ form.house }} House </p>
         <p><input type="submit" value="New Account"></p>
     </form>
+  </div>
 {% endblock %}
 

@@ -4,6 +4,7 @@ from flask.ext.httpauth import HTTPBasicAuth
 from app import app, db, lm
 from .forms import LoginForm, CreateForm
 from .models import User, Chore, House
+import pdb
 
 @lm.user_loader
 def load_user(id):
@@ -23,6 +24,10 @@ def index():
 @app.route('/home')
 def home():
     return 'Hello World'
+
+@app.route('/forgot_password')
+def forgot_password():
+    return render_template('forgot_password.html', title='Forgot Password')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -189,7 +194,6 @@ def get_resource():
     return jsonify({ 'data': 'Hello, %s!' %g.user.username })
 
 #end api test
-import pdb
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if g.user is not None and g.user.is_authenticated():
@@ -198,11 +202,13 @@ def login():
     if form.validate_on_submit():
         # login and validate the user...
         session['remember_me'] = form.remember_me.data
-        #pdb.set_trace()
         username = form.username.data
         password = form.password.data
+        #if not username:
+            #flash("Please enter a username")
+        #if not password:
+            #flash("Please enter a password")
         result = verify_password(username, password)
-        #pdb.set_trace()
         if result:
             login_user(g.user, remember=session['remember_me'])
             return redirect(request.args.get("next") or url_for("index"))

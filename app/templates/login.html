@@ -2,16 +2,41 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
-    <form action="" method="post" name="login">
-        {{ form.hidden_tag() }}
-        <p> {{ form.username }} Username </p>
-        <p> {{ form.password }} Password </p>
-        <p>{{ form.remember_me }} Remember Me</p>
-        <p><input type="submit" value="Sign In"></p>
-    </form>
-    <div>
-      <a href="{{ url_for('register') }}">Create a new account</a>
-    </div>
+<br>
+    <div class="login">
+      <h1><b>Welcome back!</b></h1>
+        <form class="login-form" action="" method="post" name="login">
+          <p>
+            <span class="login-align"></span>
+            <span class="fontawesome-user"></span>
+            <input class="login-input" type="text" name="username" value="" placeholder="Username" data-required="required">
+          </p>
+            <span class="fontawesome-lock"></span>
+            <input class="login-input" type="password" name="password" value="" placeholder="Password" data-required="required">
+            <a href="{{ url_for('forgot_password') }}" class="forgot_password_link" tabindex="-1">
+              <b class="question_mark">
+                <img src="{{ url_for('static', filename='question.png') }}" alt="question mark icon"/>
+              </b>
+            </a>
+          {{ form.hidden_tag() }}
+          <p>
+            {{ form.remember_me }}
+                <font color="white">Remember Me</font>
+          </p>
+          <p>
+              <input type="submit" value="Sign In" class="loginButton">
+          </p>
+        </form>
+        <p class="register">
+            <a href="{{ url_for('register') }}">Sign up now</a>
+        </p>
+  </div>
+
+  <p class="jump"><a href="#learn_more">Learn More about Housemates</a><p>
+
+  <a name="learn_more">
 {% endblock %}
+
+<a href="#" class="loginButton">turquoise</a>
+
 
