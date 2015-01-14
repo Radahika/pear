@@ -36,6 +36,36 @@ body {
   margin: 0;
 }
 
+.content:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: -1;
+
+  display: block;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.7)), url("images/yellow-door-london.png") no-repeat center center fixed;
+  width: 1200px;
+  height: 800px;
+
+  -webkit-filter: blur(3px);
+  -moz-filter: blue(3px);
+  -o-filter: blue(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
+  /*opacity: 0.8; */
+  /*background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)); */
+}
+
+.content {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 input {
   background-image: none;
   border: none;
@@ -109,7 +139,7 @@ input {
 	background: #28ad63;
 }
 
-b.question_mark {
+a.forgot_password_link {
   margin-left: 300px;
   position: relative;
   top: -37px;
@@ -133,6 +163,6 @@ li {
 
 a:visited, a:hover, a:link, a:active {
   text-decoration: none;
-  color: blue;
+  color: white;
 }
 
