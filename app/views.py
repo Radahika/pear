@@ -19,20 +19,19 @@ def before_request():
 @login_required
 def index():
     user = g.user
-    return render_template('index.html',title='Home',user=user)
+    return render_template('index.html',title='index',user=user)
 
 @app.route('/home')
 def home():
-    return 'Hello World'
+    user = g.user
+    return render_template('home.html', title='Home', user=user)
 
 @app.route('/forgot_password')
-def reset_password():
+def forgot_password():
     form = resetForm()
     if form.validate_on_submit():
         # reset password after email confirmation
-        pdb.set_trace()
         return redirect(url_for('register'))
-    pdb.set_trace()
     return render_template('forgot_password.html', title='Forgot Password', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
