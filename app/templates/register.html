@@ -1,17 +1,60 @@
-<!-- extend base layout -->
-{% extends "layout.html" %}
+<!doctype html>
+<html lang="en-US">
+<head>
 
-{% block content %}
-    <div class="register">
-    <h1>Create a new account</h1>
-    <form action="" method="post" name="register">
-        {{ form.hidden_tag() }}
-        <p> {{ form.username }} Username </p>
-        <p> {{ form.password }} Password </p>
-        <p> {{ form.email }} Email </p>
-        <p> {{ form.house }} House </p>
-        <p><input type="submit" value="New Account"></p>
-    </form>
-  </div>
-{% endblock %}
+    <meta charset="utf-8">
+    <title>Register</title>
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round">
+    <link rel="stylesheet" href="{{ url_for('static', filename='register_style.css')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
+  </head>
+
+<body>
+<header>
+  <div class="content">
+    <div class="home"><a href="{{ url_for('index') }}">Return
+      <img src="../static/images/home.svg" alt="home"></a>
+</div>
+  <hgroup>
+    <div class="container">
+      <div id="register">
+
+        <h2><span class="fontawesome-lock"></span>Sign Up</h2>
+
+        <form action="" method="POST" name="register">
+            {{ form.hidden_tag() }}
+          <fieldset>
+            <p><label for="username">Username</label></p>
+            <p><input type="username" id="username" name="username" value="" placeholder="username" data-required="required"></p>
+
+            <p><label for="email">Email Address</label></p>
+            <p><input type="email" id="email" name="email" value="" placeholder="email address" data-required="required"></p>
+
+            <p><label for="house">House</label></p>
+            <p><input type="house" id="house" name="house" value="" placeholder="house"></p>
+
+            <p><label for="password">Password</label></p>
+            <p><input type="password" name="password" value="" id="password" placeholder="password" data-required="required"></p>
+
+            <p><label for="password">Repeat Password</label></p>
+            <p><input type="password" name="repeat_password" value="" id="repeat_password" placeholder="password" data-required="required"></p>
+
+            <p><input type="submit" value="New Account"></p>
+
+          </fieldset>
+
+        </form>
+      </div> <!-- end register -->
+
+      </div> <!-- end container -->
+    </hgroup>
+  </div> <!-- end content -->
+
+    <div class="overlay"></div>
+</header>
+
+  </body>
+</html>
+
 

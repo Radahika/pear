@@ -16,7 +16,6 @@ def before_request():
 
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
     user = g.user
     return render_template('index.html',title='index',user=user)
@@ -34,25 +33,29 @@ def forgot_password():
         return redirect(url_for('register'))
     return render_template('forgot_password.html', title='Forgot Password', form=form)
 
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if g.user is not None and g.user.is_authenticated():
         return redirect(url_for('index'))
     form = CreateForm()
-    #pdb.set_trace()
     if form.validate_on_submit():
         # create new account for user...
-        username = form.username.data
-        password = form.password.data
+        username = form.username.data.lower()
         email = form.email.data
-        house = form.house.data
-        if username is None or password is None or email is None:
+        house = form.house.data.lower()
+        password = form.password.data
+        repeat_password = form.repeat_password.data
+        if username is None or password is None or email is None or repeat_password is None:
+            flash('Invalid input.')
             abort(400) # missing arguments
         if User.query.filter_by(username=username).first() is not None:
             abort(400) # existing user
+        if password != repeat_password:
+            flash('Passwords do not match.')
+            return render_template('register.html', title='New Account', form=form)
         user = User(username=username, email=email)
         user.hash_password(password)
-        #pdb.set_trace()
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('login'))
@@ -207,7 +210,7 @@ def login():
     if form.validate_on_submit():
         # login and validate the user...
         session['remember_me'] = form.remember_me.data
-        username = form.username.data
+        username = form.username.data.lower()
         password = form.password.data
         #if not username:
             #flash("Please enter a username")
