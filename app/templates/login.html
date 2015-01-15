@@ -1,24 +1,25 @@
+
+<!doctype html>
 <html lang="en-US">
-  <head>
+<head>
 
     <meta charset="utf-8">
-
     <title>Login</title>
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round">
     <link rel="stylesheet" href="{{ url_for('static', filename='login_style.css')}}">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
 
-    <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
- <![endif]-->
-
   </head>
 
-  <body>
-    <div class="content">
+<body>
+<header>
+  <div class="content">
+    <div class="home"><a href="{{ url_for('home') }}">Return
+      <img src="../static/images/home.svg" alt="home"></a>
+</div>
+  <hgroup>
     <div class="container">
-
       <div id="login">
 
         <h2><span class="fontawesome-lock"></span>Sign In</h2>
@@ -55,9 +56,16 @@
 
       </div> <!-- end login -->
 
-    </div>
-  </div>
+      </div> <!-- end container -->
+    </hgroup>
+  </div> <!-- end content -->
+
+    <div class="overlay"></div>
+</header>
+
   </body>
 </html>
+
+
 
 
