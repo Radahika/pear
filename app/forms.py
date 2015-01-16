@@ -14,8 +14,9 @@ class LoginForm(Form):
 class CreateForm(Form):
     username = StringField('username', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
+    repeat_password = PasswordField('repeat_password', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
-    house = StringField('house', validators=[DataRequired()])
+    house = StringField('house')
 
 class EditForm(Form):
     username = TextField('username', validators=[DataRequired()])
