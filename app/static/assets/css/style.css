@@ -29,11 +29,11 @@ a, a:hover, a:focus {
 }
 ::selection {
 
-    background: #68dff0;
+    background: #33cc77;
     color: #fff;
 }
 ::-moz-selection {
-    background: #68dff0;
+    background: #33cc77;
     color: #fff;
 }
 
@@ -44,7 +44,7 @@ a, a:hover, a:focus {
 
 /* Bootstrap Modifications */
 .modal-header {
-	background: #68dff0;
+	background: #33cc77;
 }
 
 .modal-title {
@@ -74,7 +74,7 @@ a, a:hover, a:focus {
 /*Theme Backgrounds*/
 
 .bg-theme {
-	background-color: #68dff0;
+	background-color: #33cc77;
 }
 
 .bg-theme02 {
@@ -92,8 +92,8 @@ a, a:hover, a:focus {
 
 .btn-theme {
   color: #fff;
-  background-color: #68dff0;
-  border-color: #48bcb4;
+  background-color: #33cc77;
+  border-color: #33cc77;
 }
 .btn-theme:hover,
 .btn-theme:focus,
@@ -206,11 +206,11 @@ hr {
 /*Exclusive Theme Colors Configuration*/
 
 .label-theme {
-	background-color: #68dff0;
+	background-color: #33cc77;
 }
 
 .bg-theme {
-	background-color: #68dff0;
+	background-color: #33cc77;
 }
 
 ul.top-menu > li > .logout {
@@ -218,10 +218,10 @@ ul.top-menu > li > .logout {
 	font-size: 12px;
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
-	border: 1px solid #64c3c2 !important;
+	border: 1px solid #33cc77 !important;
 	padding: 5px 15px;
 	margin-right: 15px;
-	background: #68dff0;
+	background: #33cc77;
 	margin-top: 15px;
 }
 
@@ -325,7 +325,7 @@ ul.sidebar-menu li ul.sub li a:hover {
 }
 
 ul.sidebar-menu li ul.sub li.active a {
-    color: #68dff0;
+    color: #33cc77;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
@@ -364,7 +364,7 @@ ul.sidebar-menu li a{
 }
 
 ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover, ul.sidebar-menu li a:focus {
-    background: #68dff0;
+    background: #33cc77;
     color: #fff;
     display: block;
 
@@ -413,8 +413,8 @@ ul.sidebar-menu li a.active i {
 }
 
 .black-bg {
-    background: #ffd777;
-    border-bottom: 1px solid #c9aa5f;
+    background: #f95252;
+    border-bottom: 1px solid #B23B3B;
 }
 
 .wrapper {
@@ -433,6 +433,7 @@ a.logo {
     float: left;
     margin-top: 15px;
     text-transform: uppercase;
+    font-spacing: 1px;
 }
 
 a.logo b {
@@ -445,7 +446,7 @@ a.logo:hover, a.logo:focus {
 }
 
 a.logo span {
-    color: #68dff0;
+    color: #33cc77;
 }
 
 
@@ -523,12 +524,12 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .dropdown-menu.extended li p.green {
-    background-color: #68dff0;
+    background-color: ##33cc77;
     color: #fff;
 }
 
 .dropdown-menu.extended li p.yellow {
-    background-color: #fcb322;
+    background-color: #33cc77;
     color: #fff;
 }
 
@@ -644,7 +645,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 
 .full-width .dropdown-menu.extended.logout > li > a:hover {
     background: none !important;
-    color: #50c8ea !important;
+    color: ##33cc77 !important;
 }
 
 .dropdown-menu.extended.logout > li > a:hover {
@@ -652,7 +653,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .dropdown-menu.extended.logout > li > a:hover i {
-    color: #50c8ea;
+    color: ##33cc77;
 }
 
 .dropdown-menu.extended.logout > li > a i {
@@ -727,9 +728,9 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     border-top-color: #FCB322 !important;
 }
 .notify-arrow-green {
-    border-color: transparent transparent #68dff0;
-    border-bottom-color: #68dff0 !important;
-    border-top-color: #68dff0 !important;
+    border-color: transparent transparent ##33cc77;
+    border-bottom-color: ##33cc77 !important;
+    border-top-color: ##33cc77 !important;
 }
 
 
@@ -825,7 +826,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .ds a {
-	color: #68dff0;
+	color: #33cc77;
 }
 
 /* LINE ICONS CONFIGURATION */
@@ -921,7 +922,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     position: absolute;
     bottom: 0;
     background: #ff865c;
-    color: #68dff0;
+    color: ##33cc77;
     width: 100%;
     -webkit-border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
@@ -1055,10 +1056,10 @@ PANELS CONFIGURATIONS
 /*Green Panel*/
 .green-panel {
 	text-align: center;
-	background: #68dff0;
+	background: #33cc77;
 }
 .green-panel .green-header {
-	background: #43b1a9;
+	background: #21854D;
 	padding: 3px;
 	margin-bottom: 15px;
 }
@@ -1099,7 +1100,7 @@ PANELS CONFIGURATIONS
 }
 
 .white-panel i {
-	color: #68dff0;
+	color:  #33cc77;
 	padding-right: 4px;
 	font-size: 14px;
 }
@@ -1108,19 +1109,19 @@ PANELS CONFIGURATIONS
 .card {
   background: white;
   box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
-  margin-bottom: 1em; 
+  margin-bottom: 1em;
   height: 250px;
 }
 .stock .stock-chart {
-  background: #00c5de;
+  background: #21854D;
 }
 .stock .stock-chart #chart {
     height: 10.7em;
-    background: url(http://i.imgbox.com/abmuNQx2) center bottom no-repeat; 
-}    
+    background: url(http://i.imgbox.com/abmuNQx2) center bottom no-repeat;
+}
 .stock .current-price {
   background: #1d2122;
-  padding: 10px; 
+  padding: 10px;
 }
 .stock .current-price .info abbr {
     display: block;
@@ -1130,14 +1131,14 @@ PANELS CONFIGURATIONS
     margin-top: 0.18em;
 }
 .stock .current-price .changes {
-    text-align: right; 
+    text-align: right;
 }
 .stock .changes .up {
 	color: #4fd98b
 }
 .stock .current-price .changes .value {
       font-size: 1.8em;
-      font-weight: 700; 
+      font-weight: 700;
 }
 .stock .summary {
     color: #2f2f2f;
@@ -1189,7 +1190,7 @@ PANELS CONFIGURATIONS
 	background: #e9f0f4;
 }
 .weather-2 .weather-2-header {
-	background: #54bae6;
+	background: #33cc77;;
 	padding-top: 5px;
 	margin-bottom: 5px;
 }
@@ -1254,7 +1255,7 @@ PANELS CONFIGURATIONS
 
 /*Twitter Panel*/
 .twitter-panel {
-	background: #4fc1e9;
+	background: #33cc77;;
 	text-align: center;
 }
 .twitter-panel i {
@@ -1382,7 +1383,7 @@ PANELS CONFIGURATIONS
 	left: 35px;
 }
 .badge-popular {
-	background: #3498db;
+	background: #2AA862;
 	width: 70px;
 	height: 70px;
 	line-height: 70px;
@@ -2216,7 +2217,7 @@ label {
 
 /*footer*/
 .site-footer {
-    background: #68dff0;
+    background: #33cc77;
     color: #fff;
     padding: 10px 0;
 }

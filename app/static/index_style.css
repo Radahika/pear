@@ -120,7 +120,7 @@ header .overlay {
 div.img-leaf {
   width: 350px;
   height: 350px;
-  background: linear-gradient(to bottom right, #F97384, #f95252);
+  background: linear-gradient(to bottom right, #f95252, #B03A3A);
   background-size: cover;
   display: inline-block;
   border-radius: 350px;
@@ -133,7 +133,6 @@ div.img-leaf {
  }
 
 div.img-leaf:hover {
-  /*background-color: rgba(255, 255, 75, 0.4);*/
   opacity: 0.5;
 }
 
@@ -171,7 +170,7 @@ div.img-leaf:hover {
 div.footer {
   padding: 5em 0;
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #333;
   font-size: .8em;
   color: white;
   position: relative

@@ -21,6 +21,7 @@ def index():
     return render_template('index.html',title='index',user=user)
 
 @app.route('/home')
+@login_required
 def home():
     user = g.user
     return render_template('home.html', title='Home', user=user)
@@ -33,7 +34,6 @@ def forgot_password():
         return redirect(url_for('register'))
     return render_template('forgot_password.html', title='Forgot Password', form=form)
 
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if g.user is not None and g.user.is_authenticated():
@@ -60,6 +60,12 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html', title='New Account', form=form)
+
+@app.route('/blank')
+@login_required
+def blank():
+    user = g.user
+    return render_template('blank.html', title='Home', user=user)
 
 #start api test
 auth = HTTPBasicAuth()
