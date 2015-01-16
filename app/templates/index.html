@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <title>Housemates</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='home_style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 
@@ -17,51 +17,74 @@
   </div>
   <div class="overlay"></div>
 </header>
+<div class="wrapper">
+
 <section class="site">
-  <nav> <a href="{{ url_for('index') }}">Home</a> <a href="{{ url_for('login') }}">Log In</a> <a href="{{ url_for('register') }}">Sign Up</a> <a id="learn_more">Learn More</a> <a id="contact">Contact</a> </nav><div class="jquery-script-ads"><script type="text/javascript">
+  <nav> <a href="{{ url_for('home') }}">Home</a> <a href="{{ url_for('login') }}">Log In</a> <a href="{{ url_for('register') }}">Sign Up</a> <a id="learn_more">Learn More</a> <a id="contact">Contact</a> <a href=# id="sign_out">Sign Out</a></nav><div class="jquery-script-ads"><script type="text/javascript">
 </script>
 </div>
-
-
 <section class="contents" id="learn_more">
-  <div>
-    <h1>Simplify Life</h1>
-    <p> Housemates takes the pain out of living with roomates by helping handle the more annoying parts of living together.</p>
+
+  <div class="img-box">
+    <div class="img-leaf"><p class="img-label">Simplify Life<br>
+      <img class="icons" src="../static/images/friends.svg" alt"friend group">
+      </p>
+    </div>
+      <p class="img-text"> Housemates takes the pain out of living with roomates by helping handle the more annoying parts of living together.</p>
   </div>
 
-  <div>
-    <h1>Manage Money</h1>
-    <p> We keep track of dept so you don't have to. Just enter what you buy for the house and we will take care of notifying your roomates what they owe you. We'll even crunch the numbers.</p>
+  <div class="img-box-right">
+      <p class="img-text"> We keep track of dept so you don't have to. Just enter what you buy for the house and we will take care of notifying your roomates what they owe you. We'll even crunch the numbers.</p>
+      <div class="img-leaf"><p class="img-label">Finances<br>
+      <img class="icons" src="../static/images/money.svg" alt="track money">
+    </p>
+  </div>
   </div>
 
-  <div>
-    <h1>Balance Work</h1>
-    <p>Someone not helping around the house? Relax. Tell Housemates the chores and we will rotate through the roommates to keep track of whose turn it is.</p>
+  <div class="img-box">
+    <div class="img-leaf"><p class="img-label">Balance work<br>
+      <img class="icons" src="../static/images/chore.svg" alt="sweeping">
+    </p></div>
+      <p class="img-text"> Someone not helping around the house? Relax. Tell Housemates the chores and we will rotate through the roommates to keep track of whose turn it is.</p>
   </div>
 
-  <div>
-    <h1>Talk it Out</h1>
-    <p>Housemates gives you a place to talk all things house related. We give you a centralized comment board to leave messages, as well as anonymous comments.</p>
+  <div class="img-box-right">
+      <p class="img-text"> Housemates gives you a place to talk all things house related. We give you a centralized comment board to leave messages, as well as anonymous comments.</p>
+      <div class="img-leaf"><p class="img-label">Talk it out<br>
+      <img class="icons" src="../static/images/talking.svg" alt="talking">
+    </p></div>
   </div>
 
-  <div>
-    <h1>Never Miss a Bill</h1>
-    <p>We can remind you when your bills are due so you can avoid getting the power turned off on you during your parties! We can even let your roommates know how much they owe you each month.</p>
+  <div class="img-box">
+    <div class="img-leaf"><p class="img-label">Track Bills<br>
+      <img class="icons" src="../static/images/bills.svg" alt="bills">
+    </p>
+  </div>
+      <p class="img-text"> We can remind you when your bills are due so you can avoid getting the power turned off on you during your parties! We can even let your roommates know how much they owe you each month.</p>
   </div>
 
-  <div>
-    <h1>We Keep it Private</h1>
-    <p> Your room gets its own unuque access code, ensuring that other users can't see your data. </p>
+    <div class="img-box-right">
+      <p class="img-text"> Your room gets its own unique access code, ensuring that other users can't see your data.
+      <div class="img-leaf"><p class="img-label">Privacy<br>
+      <img class="icons" src="../static/images/guard.svg" alt="guard">
+    </p></div>
   </div>
 
-  <div>
-    <h1>Reason to Celebrate</h1>
-    <p>Be a better roommate, and live with better people. We make it easy to focus on the good times by handling the dirty work.</p>
+   <div class="img-box">
+    <div class="img-leaf"><p class="img-label">Celebrate<br>
+      <img class="icons" src="../static/images/party.svg" alt="party">
+    </p>
   </div>
-  </section>
+      <p class="img-text"> Be a better roommate, and live with better people. We make it easy to focus on the good times by handling the dirty work.</p>
+  </div>
 
-  <section class="footer" id="contact">
-    <div>
+</div>
+   </section>
+   <div class="push"></div>
+ </div>
+
+  <section class="footer-container" id="contact">
+    <div class="footer">
       <p>E-mail: radhika.marvin@yahoo.com</p>
       <p>Housemates copyright © 2015</p>
     </section>
@@ -85,5 +108,6 @@ $("#learn_more").click(function() {
   </script>
   </section>
 </body>
+
 </html>
 

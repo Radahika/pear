@@ -37,7 +37,7 @@ def forgot_password():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     form = CreateForm()
     if form.validate_on_submit():
         # create new account for user...
@@ -219,7 +219,7 @@ def login():
         result = verify_password(username, password)
         if result:
             login_user(g.user, remember=session['remember_me'])
-            return redirect(request.args.get("next") or url_for("index"))
+            return redirect(request.args.get("next") or url_for("home"))
         else:
             flash("Incorrect Login")
             return render_template('login.html', title='Sign In', form=form)
