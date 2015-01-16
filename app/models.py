@@ -2,7 +2,13 @@ from app import db, app
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
+import sys
 
+if sys.version_info >= (3, 0):
+    enable_search = False
+else:
+    enable_search = True
+    import flask.ext.whooshalchemy as whooshalchemy
 
 followers = db.Table(
     'followers',
@@ -10,12 +16,24 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+class House(db.Model):
+    __searchable__ = ['housename']
+    __tablename__ = 'house'
+    id = db.Column(db.Integer, primary_key=True)
+    housename = db.Column(db.String(64), index=True, unique=True)
+    users = db.relationship('User', backref='home', lazy='dynamic')
+
+    def __repr__(self):
+        return '<House %r>' % (self.housename)
+
+
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username  = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     email = db.Column(db.String(120), index=True, unique=True)
-    house = db.relationship('House', uselist=False, backref='user')
+    house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
     chores = db.relationship('Chore', backref='author', lazy='dynamic')
     followed = db.relationship('User',
                                secondary=followers,
@@ -89,22 +107,12 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % (self.username)
 
-class House(db.Model):
-    __tablename__ = 'houses'
-    id = db.Column(db.Integer, primary_key=True)
-    housename = db.Column(db.String(64), index=True, unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return '<House %r>' % (self.housename)
-
-
 class Chore(db.Model):
-    __tablename__ = 'chores'
+    __tablename__ = 'chore'
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(64))
     description = db.Column(db.String(140))
-    status = db.Column(db.Boolean) #Initalize all chores as incompleted
+    status = db.Column(db.Boolean, default=False) #Initalize all chores as incompleted
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -118,3 +126,22 @@ class Chore(db.Model):
     def __repr__(self):
         return '<Chore %r, Complete: %r>' % (self.title, self.status)
 
+
+#class House(db.Model):
+    #id = db.Column(db.Integer, primary_key=True)
+    #housename = db.Column(db.String(64), index=True, unique=True)
+    #users = db.relationship('User', backref='home', lazy='dynamic')
+
+    #def __repr__(self):
+        #return '<House %r>' % (self.housename)
+
+#class User(db.Model):
+    #id = db.Column(db.Integer, primary_key = True)
+    #username = db.Column(db.String(64), index=True, unique=True)
+    #house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
+
+    #def __repr__(self):
+        #return '<User %r>' % (self.username)
+
+if enable_search:
+    whooshalchemy.whoosh_index(app, House)
