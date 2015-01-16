@@ -233,8 +233,9 @@ def settings():
 @app.route('/logout')
 @login_required
 def logout():
+    #pdb.set_trace()
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route('/chores')
 @login_required

@@ -20,9 +20,20 @@
 <div class="wrapper">
 
 <section class="site">
-  <nav> <a href="{{ url_for('home') }}">Home</a> <a href="{{ url_for('login') }}">Log In</a> <a href="{{ url_for('register') }}">Sign Up</a> <a id="learn_more">Learn More</a> <a id="contact">Contact</a> <a href=# id="sign_out">Sign Out</a></nav><div class="jquery-script-ads"><script type="text/javascript">
-</script>
-</div>
+  <nav>
+    {% if g.user.is_authenticated() %}
+        <a href="{{ url_for('home') }}">Home</a>
+        <a id="learn_more">Learn More</a>
+        <a id="contact">Contact</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+    {% if not g.user.is_authenticated() %}
+        <a href="{{ url_for('login') }}">Log In</a>
+        <a href="{{ url_for('register') }}">Sign Up</a>
+        <a id="learn_more">Learn More</a>
+        <a id="contact">Contact</a>
+    {% endif %}
+  </nav>
 <section class="contents" id="learn_more">
 
   <div class="img-box">
