@@ -16,9 +16,10 @@
   <div class="content">
     <div class="home"><a href="{{ url_for('index') }}">Return
       <img src="../static/images/home.svg" alt="home"></a>
-</div>
+    </div>
   <hgroup>
     <div class="container">
+    {% include 'flash.html' %}
       <div id="login">
 
         <h2><span class="fontawesome-lock"></span>Sign In</h2>
