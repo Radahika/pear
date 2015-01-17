@@ -5,10 +5,19 @@ from migrate import *
 from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
-houses = Table('houses', pre_meta,
+house = Table('house', pre_meta,
     Column('id', INTEGER, primary_key=True, nullable=False),
     Column('housename', VARCHAR(length=64)),
-    Column('user_id', INTEGER),
+)
+
+followers = Table('followers', post_meta,
+    Column('follower_id', Integer),
+    Column('followed_id', Integer),
+)
+
+houses = Table('houses', post_meta,
+    Column('id', Integer, primary_key=True, nullable=False),
+    Column('housename', String(length=64)),
 )
 
 user = Table('user', post_meta,
@@ -25,13 +34,19 @@ def upgrade(migrate_engine):
     # migrate_engine to your metadata
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    pre_meta.tables['houses'].columns['user_id'].drop()
-    post_meta.tables['user'].columns['house_id'].create()
+    pre_meta.tables['house'].drop()
+    post_meta.tables['followers'].create()
+    post_meta.tables['houses'].create()
+    post_meta.tables['user'].columns['email'].create()
+    post_meta.tables['user'].columns['password_hash'].create()
 
 
 def downgrade(migrate_engine):
     # Operations to reverse the above upgrade go here.
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    pre_meta.tables['houses'].columns['user_id'].create()
-    post_meta.tables['user'].columns['house_id'].drop()
+    pre_meta.tables['house'].create()
+    post_meta.tables['followers'].drop()
+    post_meta.tables['houses'].drop()
+    post_meta.tables['user'].columns['email'].drop()
+    post_meta.tables['user'].columns['password_hash'].drop()
