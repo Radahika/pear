@@ -245,6 +245,7 @@ def unauthorized():
     return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
     # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
 
+#/*****
 @app.errorhandler(400)
 def not_found(error):
     return make_response(jsonify( { 'error': 'Bad request' } ), 400)
@@ -371,6 +372,13 @@ def get_user(id):
 def get_auth_token():
     token = g.user.generate_auth_token(600)
     return jsonify({'token': token.decode('ascii'), 'duration': 600})
+
+
+@app.route('/api/v1.0/logout')
+@auth.login_required
+def remove_auth_token(user):
+    user.invalidate_auth_token()
+    return make_response(jsonify( { 'status': '200' } ), 200)
 
 @app.route('/api/v1.0/resource')
 @auth.login_required

@@ -55,6 +55,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username  = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    token = db.Column(db.String(128))
     email = db.Column(db.String(120), index=True, unique=True)
     house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
     chores = db.relationship('Chore', backref='author', lazy='dynamic')
@@ -115,6 +116,9 @@ class User(db.Model):
     def generate_auth_token(self, expiration=600):
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({ 'id': self.id })
+
+    def invalidate_auth_token(self):
+        self.token = None
 
     @staticmethod
     def verify_auth_token(token):
