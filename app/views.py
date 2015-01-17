@@ -171,8 +171,9 @@ def chores():
     return render_template('chores.html',title='Chores',user=user)
 
 @app.route('/user/<username>')
+@app.route('/user/<int:page>', methods=['GET', 'POST'])
 @login_required
-def user(username):
+def user(username, page=1):
     user = User.query.filter_by(username=username).first()
     if user == None:
         flash('User %s not found.' % username)
