@@ -43,6 +43,9 @@ class House(db.Model):
     def message_count(self):
         return len(self.messages)
 
+    def sorted_messages(self):
+        return self.messages.order_by(Message.timestamp.desc())
+
     def __repr__(self):
         return '<House %r>' % (self.housename)
 
@@ -131,6 +134,8 @@ class User(db.Model):
     def message_count(self):
         return len(self.messages.all())
 
+    def house_messages(self):
+        return self.home.sorted_messages()
 
     def __repr__(self):
         return '<User %r>' % (self.username)

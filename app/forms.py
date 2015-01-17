@@ -43,3 +43,5 @@ class EditForm(Form):
 class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()])
 
+class MessageForm(Form):
+    message = StringField('message', validators=[DataRequired()])

@@ -125,7 +125,7 @@
                         <ul class="dropdown-menu extended inbox">
                             <div class="notify-arrow notify-arrow-green"></div>
                             <li>
-                                <p class="green">You have 5 new messages</p>
+                            <p class="green">You have {{ user.message_count() }} new messages</p>
                             </li>
                             <li>
                                 <a href="home#">
@@ -287,7 +287,34 @@
           	<h3><i class="fa fa-angle-right"></i> Blank Page</h3>
           	<div class="row mt">
           		<div class="col-lg-12">
-          		<p>Place your content here.</p>
+              <form action="" method="post" name="message">
+                {{ form.hidden_tag() }}
+                <table>
+                  <tr>
+                    <td>Say Something:</td>
+                    <td> {{ form.message(size=30, maxlength=140) }}</td>
+                    <td>
+                      {% for error in form.message.errors %}
+                      <span style="color: red;">[{{ error }}]</span><br>
+                      {% endfor %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><input type="submit" value="Send"></td>
+                    <td></td>
+                </tr>
+              </table>
+            </form>
+            {% for message in messages.items %}
+            <p>
+                {{ message.author.username }} says: <b>{{ message.message }}</b>
+            </p>
+            {% endfor %}
+            {% if messages.has_prev %}<a href="{{ url_for('home', page=messages.prev_num) }}"><< Newer messages</a>{%
+            else %}<< New messages{% endif %} |
+            {% if messages.has_next %}<a href="{{ url_for('home', page=messages.next_num) }}">Older messages >></a>{%
+            else %}Older messages >>{% endif %}
           		</div>
           	</div>
 

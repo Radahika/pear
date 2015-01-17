@@ -2,8 +2,10 @@ from flask import Flask, render_template, flash, redirect, session, url_for, req
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.httpauth import HTTPBasicAuth
 from app import app, db, lm
-from .forms import LoginForm, CreateForm, ResetForm, HouseForm
-from .models import User, Chore, House
+from .forms import LoginForm, CreateForm, ResetForm, HouseForm, MessageForm
+from .models import User, Chore, House, Message, Event
+import datetime
+from config import POSTS_PER_PAGE
 import pdb
 
 @lm.user_loader
@@ -20,11 +22,24 @@ def index():
     user = g.user
     return render_template('index.html',title='index',user=user)
 
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
+@app.route('/home/<int:page>', methods=['GET', 'POST'])
 @login_required
-def home():
+def home(page=1):
     user = g.user
-    return render_template('home.html', title='Home', user=user)
+    form = MessageForm()
+    if form.validate_on_submit():
+        message = Message(message=form.message.data, timestamp=datetime.datetime.utcnow(), author=user, home=user.home)
+        db.session.add(message)
+        db.session.commit()
+        flash('Your message is sent!')
+        return redirect(url_for('home'))
+    messages = user.house_messages().paginate(page, POSTS_PER_PAGE, False)
+    return render_template('home.html',
+                            title='Home',
+                            user=user,
+                            form=form,
+                            messages=messages)
 
 @app.route('/forgot_password')
 def forgot_password():
