@@ -3,6 +3,7 @@ from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 import sys
+import pdb
 
 if sys.version_info >= (3, 0):
     enable_search = False
@@ -17,11 +18,30 @@ followers = db.Table(
 )
 
 class House(db.Model):
-    __searchable__ = ['housename']
     __tablename__ = 'house'
+    __searchable__ = ['housename']
     id = db.Column(db.Integer, primary_key=True)
     housename = db.Column(db.String(64), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
     users = db.relationship('User', backref='home', lazy='dynamic')
+    chores = db.relationship('Chore', backref='home', lazy='dynamic')
+    events = db.relationship('Event', backref='home', lazy='dynamic')
+    messages = db.relationship('Message', backref='home', lazy='dynamic')
+
+    def get_id(self):
+        try:
+            return unicode(self.id) # python 2
+        except NameError:
+            return str(self.id) # python 3
+
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def message_count(self):
+        return len(self.messages)
 
     def __repr__(self):
         return '<House %r>' % (self.housename)
@@ -41,6 +61,7 @@ class User(db.Model):
                                secondaryjoin=(followers.c.followed_id == id),
                                backref=db.backref('followers', lazy='dynamic'),
                                lazy='dynamic')
+    messages = db.relationship('Message', backref='author', lazy='dynamic')
 
     def is_authenticated(self):
         return True
@@ -104,6 +125,13 @@ class User(db.Model):
         user = User.query.get(data['id'])
         return user
 
+    def get_housename(self):
+        return str(self.home.housename)
+
+    def message_count(self):
+        return len(self.messages.all())
+
+
     def __repr__(self):
         return '<User %r>' % (self.username)
 
@@ -115,6 +143,7 @@ class Chore(db.Model):
     status = db.Column(db.Boolean, default=False) #Initalize all chores as incompleted
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
 
     def get_id(self):
         try:
@@ -126,22 +155,28 @@ class Chore(db.Model):
     def __repr__(self):
         return '<Chore %r, Complete: %r>' % (self.title, self.status)
 
+class Event(db.Model):
+    __tablename__ = 'event'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64), index=True)
+    description = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime)
+    house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
 
-#class House(db.Model):
-    #id = db.Column(db.Integer, primary_key=True)
-    #housename = db.Column(db.String(64), index=True, unique=True)
-    #users = db.relationship('User', backref='home', lazy='dynamic')
+    def __repr__(self):
+        return '<Event %r, Date: %r>' % (self.title, self.timestamp)
 
-    #def __repr__(self):
-        #return '<House %r>' % (self.housename)
+class Message(db.Model):
+    __tablename__ = 'message'
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(500), index=True)
+    timestamp = db.Column(db.DateTime)
+    house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-#class User(db.Model):
-    #id = db.Column(db.Integer, primary_key = True)
-    #username = db.Column(db.String(64), index=True, unique=True)
-    #house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
-
-    #def __repr__(self):
-        #return '<User %r>' % (self.username)
+    def __repr__(self):
+        return '<Message %r, Date: %r>' % (self.message, self.timestamp)
 
 if enable_search:
     whooshalchemy.whoosh_index(app, House)
+

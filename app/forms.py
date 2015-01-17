@@ -3,7 +3,7 @@ from wtforms import StringField, BooleanField, TextField, PasswordField
 from wtforms.validators import DataRequired
 from app.models import User
 
-class resetForm(Form):
+class ResetForm(Form):
     email = StringField('email', validators=[DataRequired()])
 
 class LoginForm(Form):
@@ -16,7 +16,11 @@ class CreateForm(Form):
     password = PasswordField('password', validators=[DataRequired()])
     repeat_password = PasswordField('repeat_password', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
-    house = StringField('house')
+
+class HouseForm(Form):
+    housename = StringField('housename', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+    repeat_password = PasswordField('repeat_password', validators=[DataRequired()])
 
 class EditForm(Form):
     username = TextField('username', validators=[DataRequired()])
@@ -35,3 +39,7 @@ class EditForm(Form):
             self.username.errors.append('This username is already in use. Please choose another one.')
             return False
         return True
+
+class SearchForm(Form):
+    search = StringField('search', validators=[DataRequired()])
+

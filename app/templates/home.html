@@ -37,7 +37,7 @@
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="{{ url_for('index') }}" class="logo"><b>Housemates</b></a>
+            <a href="{{ url_for('index') }}" class="logo"><b>{{ user.get_housename() }}</b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -114,8 +114,13 @@
                     <!-- inbox dropdown start-->
                     <li id="header_inbox_bar" class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+
                             <i class="fa fa-envelope-o"></i>
-                            <span class="badge bg-theme">5</span>
+                             {% if user.message_count() > 0 %}
+                            <span class="badge bg-theme">
+                              {{ user.message_count() }}
+                            </span>
+                            {% endif %}
                         </a>
                         <ul class="dropdown-menu extended inbox">
                             <div class="notify-arrow notify-arrow-green"></div>
@@ -123,7 +128,7 @@
                                 <p class="green">You have 5 new messages</p>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="home#">
                                   <span class="photo"><img alt="avatar" src="{{ url_for('static', filename='assets/img/ui-zac.jpg') }}"></span>
                                     <span class="subject">
                                     <span class="from">Zac Snider</span>
@@ -135,7 +140,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="home#">
                                   <span class="photo"><img alt="avatar" src="{{ url_for('static', filename='assets/img/ui-divya.jpg') }}"></span>
                                     <span class="subject">
                                     <span class="from">Divya Manian</span>
@@ -211,7 +216,7 @@
                       <ul class="sub">
                           <li><a  href="general.html">House Chores</a></li>
                           <li><a  href="buttons.html">Your Chores</a></li>
-                          <li><a  href="panels.html">Panels</a></li>
+                          <li><a  href="panels.html">Calendar</a></li>
                       </ul>
                   </li>
 

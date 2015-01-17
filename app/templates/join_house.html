@@ -6,7 +6,7 @@
     <title>Register</title>
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round">
-    <link rel="stylesheet" href="{{ url_for('static', filename='register_style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='join_style.css')}}">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
   </head>
 
@@ -20,27 +20,27 @@
     <div class="container">
       <div id="register">
 
-        <h2><span class="fontawesome-lock"></span>Sign Up</h2>
+        <h2><span class="fontawesome-lock"></span>Join/Create a House</h2>
 
         <form action="" method="POST" name="register">
             {{ form.hidden_tag() }}
           <fieldset>
-            <p><label for="username">Username</label></p>
-            <p><input type="username" id="username" name="username" value="" placeholder="username" data-required="required"></p>
+            <p><label for="housename">Housename</label></p>
+            <p><input type="housename" id="housename" name="housename" value="" placeholder="housename" data-required="required"></p>
 
-            <p><label for="email">Email Address</label></p>
-            <p><input type="email" id="email" name="email" value="" placeholder="email address" data-required="required"></p>
+            <!--<p><label for="email">Email Address</label></p>-->
+            <!--<p><input type="email" id="email" name="email" value="" placeholder="email address" data-required="required"></p>-->
 
             <!--<p><label for="house">House</label></p>-->
             <!--<p><input type="house" id="house" name="house" value="" placeholder="house"></p>-->
 
-            <p><label for="password">Password</label></p>
+            <p><label for="password">House Password</label></p>
             <p><input type="password" name="password" value="" id="password" placeholder="password" data-required="required"></p>
 
             <p><label for="password">Repeat Password</label></p>
             <p><input type="password" name="repeat_password" value="" id="repeat_password" placeholder="password" data-required="required"></p>
 
-            <p><input type="submit" value="New Account"></p>
+            <p><input type="submit" value="Join Now"></p>
 
           </fieldset>
 
@@ -56,5 +56,6 @@
 
   </body>
 </html>
+
 
 
