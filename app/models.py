@@ -131,6 +131,9 @@ class User(db.Model):
     def get_housename(self):
         return str(self.home.housename)
 
+    def chore_count(self):
+        return len(self.chores.all())
+
     def message_count(self):
         return len(self.messages.all())
 

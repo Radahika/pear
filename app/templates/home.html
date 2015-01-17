@@ -46,12 +46,16 @@
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                             <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">4</span>
+                            {% if user.chore_count() > 0 %}
+                            <span class="badge bg-theme">
+                              {{ user.chore_count() }}
+                            </span>
+                            {% endif %}
                         </a>
                         <ul class="dropdown-menu extended tasks-bar">
                             <div class="notify-arrow notify-arrow-green"></div>
                             <li>
-                                <p class="green">You have 4 pending tasks</p>
+                            <p class="green">You have {{ user.chore_count() }} pending tasks</p>
                             </li>
                             <li>
                                 <a href="index.html#">
