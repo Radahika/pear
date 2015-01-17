@@ -17,7 +17,7 @@ header {
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: url(images/home.jpg) center no-repeat;
+  background: url(../images/home.jpg) center no-repeat;
   /* Image Credit: Unsplash.me */
   background-size: cover;
 }

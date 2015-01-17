@@ -19,4 +19,5 @@ ADMINS = ['radhika.marvin@yahoo.com',
 
 MAX_SEARCH_RESULTS = 50
 # pagination
-POSTS_PER_PAGE = 4
+MESSAGES_PER_PAGE = 4
+CHORES_PER_PAGE = 5

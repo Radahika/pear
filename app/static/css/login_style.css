@@ -46,11 +46,11 @@ input {
 
 /* ---------- LOGIN ---------- */
 
-#register {
+#login {
 	width: 400px;
 }
 
-#register h2 {
+#login h2 {
 	background: #f95252;
 	border-radius: 20px 20px 0 0;
 	color: #fff;
@@ -58,46 +58,46 @@ input {
 	padding: 20px 26px;
 }
 
-#register h2 span[class*="fontawesome-"] {
+#login h2 span[class*="fontawesome-"] {
 	margin-right: 14px;
 }
 
-#register fieldset {
+#login fieldset {
 	background: #fff;
 	border-radius: 0 0 20px 20px;
 	padding: 20px 26px;
 }
 
-#register fieldset p {
+#login fieldset p {
 	color: #777;
 	margin-bottom: 14px;
 }
 
-#register fieldset p:last-child {
+#login fieldset p:last-child {
 	margin-bottom: 0;
 }
 
-#register fieldset input {
+#login fieldset input {
 	border-radius: 3px;
 }
 
-#register fieldset input[type="housename"], #register fieldset input[type="password"] {
+#login fieldset input[type="username"], #login fieldset input[type="password"] {
 	background: #eee;
 	color: #777;
 	padding: 4px 10px;
 	width: 100%;
 }
 
-#register fieldset input[type="submit"] {
+#login fieldset input[type="submit"] {
 	background: #33cc77;
 	color: #fff;
 	display: block;
 	margin: 0 auto;
 	padding: 4px 0;
-	width: 200px;
+	width: 100px;
 }
 
-#register fieldset input[type="submit"]:hover {
+#login fieldset input[type="submit"]:hover {
 	background: #28ad63;
 }
 
@@ -161,7 +161,7 @@ header {
   position: relative;
   overflow: hidden;
 /*  background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)); */
-  background: url(images/Yellow-House-Venice.jpg) center no-repeat;
+  background: url(../images/yellow-door-london.png) center no-repeat;
   /* Image Credit: Unsplash.me */
   background-size: cover;
 }
@@ -217,16 +217,14 @@ header .overlay {
 div.home a {
     position: absolute;
     top: 0;
-    left: 0px;
+    left: 0;
     width: 5%;
     text-align: left;
+    padding-left: 10px;
     padding-top: 10px;
-    padding-left: 5px;
-    padding-right: 10px;
-    opacity: 0.8;
-    color: black;
+    opacity: 0.7;
+    color: #f95252;
     text-align: right;
-    background-color: rgba(255, 255, 255, 0.4);
 }
 
 

@@ -1,15 +1,6 @@
 $color: #000;
 $color-bg: #c0c0c0;
-
-/* ---------- FONTAWESOME ---------- */
-/* ---------- http://fortawesome.github.com/Font-Awesome/ ---------- */
-/* ---------- http://weloveiconfonts.com/ ---------- */
-
 @import url(http://weloveiconfonts.com/api/?family=fontawesome);
-
-/* ---------- ERIC MEYER'S RESET CSS ---------- */
-/* ---------- http://meyerweb.com/eric/tools/css/reset/ ---------- */
-
 @import url(http://meyerweb.com/eric/tools/css/reset/reset.css);
 
 /* ---------- FONTAWESOME ---------- */
@@ -36,7 +27,6 @@ body {
   margin: 0;
 }
 
-
 input {
   background-image: none;
   border: none;
@@ -53,76 +43,19 @@ input {
   transform: translate(-50%, -50%);
 }
 
-/* ---------- Reset Password ---------- */
-
-#reset_password {
-	width: 400px;
+li {
+  background-position: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  list-style:none;
 }
 
-#reset_password h2 {
-	background: #f95252;
-	border-radius: 20px 20px 0 0;
-	color: #fff;
-	font-size: 28px;
-	padding: 20px 26px;
+a:visited, a:hover, a:link, a:active {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
 }
-
-#reset_password h2 span[class*="fontawesome-"] {
-	margin-right: 14px;
-}
-
-#reset_password fieldset {
-	background: #fff;
-	border-radius: 0 0 20px 20px;
-	padding: 20px 26px;
-}
-
-#reset_password fieldset p {
-	color: #777;
-	margin-bottom: 14px;
-}
-
-#reset_password fieldset p:last-child {
-	margin-bottom: 0;
-}
-
-#reset_password fieldset input {
-	border-radius: 3px;
-}
-
-#reset_password fieldset input[type="username"], #reset_password fieldset input[type="email"], #reset_password fieldset input[type="password"] {
-	background: #eee;
-	color: #777;
-	padding: 4px 10px;
-	width: 100%;
-}
-
-#reset_password fieldset input[type="submit"] {
-	background: #33cc77;
-	color: #fff;
-	margin: 0 auto;
-	padding: 4px 0;
-	width: 190px;
-}
-
-#reset_password fieldset input[type="button"] {
-  background: #33cc77;
-  color: #fff;
-  margin: 0 auto;
-  padding: 4px 0;
-  width: 100px;
-}
-
-#reset_password fieldset input[type="submit"]:hover {
-	background: #28ad63;
-}
-
-#reset_password fieldset input[type="button"]:hover {
-	background: #28ad63;
-}
-
-
-/* End of reset box */
 
 html, body {
   padding: 0;
@@ -144,7 +77,8 @@ header {
   position: relative;
   overflow: hidden;
 /*  background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)); */
-  background: url(images/red-door.jpg) center no-repeat;
+  background: url(../images/yellow-door-london.png) center no-repeat;
+  /* Image Credit: Unsplash.me */
   background-size: cover;
 }
 
@@ -195,5 +129,19 @@ header .overlay {
   opacity: 0;
   -webkit-filter: blur(4px);
 }
+
+div.home a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5%;
+    text-align: left;
+    padding-left: 10px;
+    padding-top: 10px;
+    opacity: 0.7;
+    color: #f95252;
+    text-align: right;
+}
+
 
 

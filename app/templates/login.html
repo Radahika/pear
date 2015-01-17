@@ -7,8 +7,8 @@
     <title>Login</title>
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round">
-    <link rel="stylesheet" href="{{ url_for('static', filename='login_style.css')}}">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login_style.css')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" >
   </head>
 
 <body>
@@ -35,7 +35,7 @@
             <p><input type="password" name="password" value="" id="password" placeholder="password" data-required="required"></p>
 
             <a href="{{ url_for('forgot_password') }}" class="forgot_password_link" tabindex="-1">
-                <img src="{{ url_for('static', filename='question.png') }}" alt="question mark icon"/>
+                <img src="{{ url_for('static', filename='images/question.png') }}" alt="question mark icon"/>
             </a>
 
             {{ form.hidden_tag() }}

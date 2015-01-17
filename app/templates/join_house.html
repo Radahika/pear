@@ -6,15 +6,15 @@
     <title>Register</title>
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round">
-    <link rel="stylesheet" href="{{ url_for('static', filename='join_style.css')}}">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/join_style.css')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" >
   </head>
 
 <body>
 <header>
   <div class="content">
     <div class="home"><a href="{{ url_for('index') }}">Return
-      <img src="../static/images/home.svg" alt="home"></a>
+        <img src="{{ url_for('static', filename='images/home.svg') }}" alt="home"></a>
 </div>
   <hgroup>
     <div class="container">
