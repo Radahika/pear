@@ -5,12 +5,6 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 import sys
 import pdb
 
-if sys.version_info >= (3, 0):
-    enable_search = False
-else:
-    enable_search = True
-    import flask.ext.whooshalchemy as whooshalchemy
-
 followers = db.Table(
     'followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -19,7 +13,6 @@ followers = db.Table(
 
 class House(db.Model):
     __tablename__ = 'house'
-    __searchable__ = ['housename']
     id = db.Column(db.Integer, primary_key=True)
     housename = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -188,7 +181,4 @@ class Message(db.Model):
 
     def __repr__(self):
         return '<Message %r, Date: %r>' % (self.message, self.timestamp)
-
-if enable_search:
-    whooshalchemy.whoosh_index(app, House)
 
