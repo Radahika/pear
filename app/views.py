@@ -5,7 +5,7 @@ from app import app, db, lm
 from .forms import LoginForm, CreateForm, ResetForm, HouseForm, MessageForm
 from .models import User, Chore, House, Message, Event
 import datetime
-from config import POSTS_PER_PAGE
+from config import MESSAGES_PER_PAGE, CHORES_PER_PAGE
 import pdb
 
 @lm.user_loader
@@ -34,7 +34,7 @@ def home(page=1):
         db.session.commit()
         flash('Your message is sent!')
         return redirect(url_for('home'))
-    messages = user.house_messages().paginate(page, POSTS_PER_PAGE, False)
+    messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
     return render_template('home.html',
                             title='Home',
                             user=user,
@@ -120,7 +120,7 @@ def join_house():
         g.user.home = house
         db.session.add(g.user)
         db.session.commit()
-        return render_template('home.html', title='Home', user=user)
+        return redirect(url_for("home"))
     return render_template('join_house.html', title='Join/Create a House', form=form)
 
 @app.route('/blank')
@@ -177,10 +177,7 @@ def user(username):
     if user == None:
         flash('User %s not found.' % username)
         return redirect(url_for('index'))
-    chores = [
-            {'author': user, 'title': 'Buy milk'},
-            {'author': user, 'title': 'Get kisses from Kevin'}
-            ]
+    chores = user.house_messages().paginate(page, CHORES_PER_PAGE, False)
     return render_template('user.html',
                             user=user,
                             chores=chores)
@@ -245,29 +242,13 @@ def unauthorized():
     return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
     # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
 
-#/*****
 @app.errorhandler(400)
-def not_found(error):
+def bad_request(error):
     return make_response(jsonify( { 'error': 'Bad request' } ), 400)
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify( { 'error': 'Not found' } ), 404)
-
-tasks = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    }
-]
 
 def make_public_task(task):
     new_task = {}

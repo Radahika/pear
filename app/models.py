@@ -39,6 +39,9 @@ class House(db.Model):
     def sorted_messages(self):
         return self.messages.order_by(Message.timestamp.desc())
 
+    def sorted_chores(self):
+        return self.chores.order_by(Chore.timestamp.desc())
+
     def __repr__(self):
         return '<House %r>' % (self.housename)
 
@@ -136,6 +139,9 @@ class User(db.Model):
 
     def house_messages(self):
         return self.home.sorted_messages()
+
+    def house_chores(self):
+        return self.home.sorted_chores()
 
     def __repr__(self):
         return '<User %r>' % (self.username)
