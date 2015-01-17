@@ -1,2 +1,2 @@
-python3 virtualenv.py flask
-flask\Scripts\pip install -r requirements.txt
+python virtualenv.py flask
+flask/Scripts/pip install -r requirements.txt
