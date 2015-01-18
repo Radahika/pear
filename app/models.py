@@ -62,6 +62,10 @@ class User(db.Model):
                                backref=db.backref('followers', lazy='dynamic'),
                                lazy='dynamic')
     messages = db.relationship('Message', backref='author', lazy='dynamic')
+    read_messages = 0
+
+    def sorted_messages(self):
+        return self.messages.order_by(Message.timestamp.desc())
 
     def is_authenticated(self):
         return True
@@ -137,11 +141,21 @@ class User(db.Model):
     def message_count(self):
         return len(self.messages.all())
 
+    def house_message_count(self):
+        count = 0
+        for message in self.home.messages.all():
+            if message.author is not self:
+                count += 1
+        return count
+
     def house_messages(self):
         return self.home.sorted_messages()
 
     def house_chores(self):
         return self.home.sorted_chores()
+
+    def new_message_count(self):
+        return self.house_message_count() - self.read_messages
 
     def __repr__(self):
         return '<User %r>' % (self.username)
