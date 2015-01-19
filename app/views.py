@@ -164,11 +164,14 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/chores')
+@app.route('/chores', methods=['GET', 'POST'])
+@app.route('/chores/<int:page>', methods=['GET', 'POST'])
 @login_required
-def chores():
+def chores(page=1):
     user = g.user
-    return render_template('chores.html',title='Chores',user=user)
+    #return render_template('chores.html',title='Chores',user=user)
+    messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
+    return render_template('todo_list.html', title='Chores', user=user, messages=messages)
 
 @app.route('/user/<username>')
 @app.route('/user/<int:page>', methods=['GET', 'POST'])

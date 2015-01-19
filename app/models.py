@@ -199,6 +199,9 @@ class Message(db.Model):
     house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def pretty_time(self):
+        return str(self.timestamp)[0:-10]
+
     def __repr__(self):
-        return '<Message %r, Date: %r>' % (self.message, self.timestamp)
+        return '<Message %r, Date: %r>' % (self.message, self.pretty_time())
 
