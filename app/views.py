@@ -180,6 +180,17 @@ def chores(page=1):
                             messages=messages,
                             chores=chores)
 
+@app.route('/calendar', methods=['GET', 'POST'])
+@app.route('/calendar/<int:page>', methods=['GET', 'POST'])
+@login_required
+def calendar(page=1):
+    user = g.user
+    messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
+    return render_template('calendar.html',
+                            title='Chores',
+                            user=user,
+                            messages=messages)
+
 @app.route('/user/<username>')
 @app.route('/user/<int:page>', methods=['GET', 'POST'])
 @login_required

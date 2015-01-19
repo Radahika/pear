@@ -183,14 +183,14 @@
                   </li>
 
                   <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>Task Manager</span>
                       </a>
                       <ul class="sub">
                         <li><a href="{{ url_for('chores') }}">House Chores</a></li>
-                        <li><a  href="buttons.html">Your Chores</a></li>
-                          <li><a  href="panels.html">Calendar</a></li>
+                        <li><a  href="{{ url_for('chores') }}">Your Chores</a></li>
+                        <li><a  href="{{ url_for('calendar') }}">Calendar</a></li>
                       </ul>
                   </li>
 
@@ -200,13 +200,13 @@
                           <span>Components</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="calendar.html">Calendar</a></li>
+                        <li><a  href="{{ url_for('calendar') }}">Calendar</a></li>
                           <li><a  href="gallery.html">Gallery</a></li>
                           <li><a  href="todo_list.html">Todo List</a></li>
                       </ul>
                   </li>
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a href="javascript:;" >
                           <i class="fa fa-book"></i>
                           <span>Extra Pages</span>
                       </a>
