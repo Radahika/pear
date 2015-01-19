@@ -171,7 +171,12 @@ def chores(page=1):
     user = g.user
     #return render_template('chores.html',title='Chores',user=user)
     messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
-    return render_template('todo_list.html', title='Chores', user=user, messages=messages)
+    chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
+    return render_template('todo_list.html',
+                            title='Chores',
+                            user=user,
+                            messages=messages,
+                            chores=chores)
 
 @app.route('/user/<username>')
 @app.route('/user/<int:page>', methods=['GET', 'POST'])

@@ -154,6 +154,9 @@ class User(db.Model):
     def house_chores(self):
         return self.home.sorted_chores()
 
+    def sorted_chores(self):
+        return self.chores.order_by(Chore.timestamp.desc())
+
     def new_message_count(self):
         return self.house_message_count() - self.read_messages
 
