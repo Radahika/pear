@@ -25,7 +25,7 @@ def index():
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/home/<int:page>', methods=['GET', 'POST'])
 @login_required
-def home(page=1):
+def home(page=1, chore_page=1):
     user = g.user
     form = MessageForm()
     if form.validate_on_submit():
@@ -35,11 +35,13 @@ def home(page=1):
         flash('Your message is sent!')
         return redirect(url_for('home'))
     messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
+    chores = user.sorted_chores().paginate(chore_page, CHORES_PER_PAGE, False)
     return render_template('home.html',
                             title='Home',
                             user=user,
                             form=form,
-                            messages=messages)
+                            messages=messages,
+                            chores=chores)
 
 @app.route('/forgot_password')
 def forgot_password():
