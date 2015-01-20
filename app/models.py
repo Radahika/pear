@@ -61,8 +61,7 @@ class User(db.Model):
                                secondaryjoin=(followers.c.followed_id == id),
                                backref=db.backref('followers', lazy='dynamic'),
                                lazy='dynamic')
-    messages = db.relationship('Message', backref='author', lazy='dynamic')
-    read_messages = 0
+    messages = db.relationship('Message', backref='Message.sender_id', primaryjoin='User.id==Message.receiver_id', lazy='dynamic')
 
     def sorted_messages(self):
         return self.messages.order_by(Message.timestamp.desc())
@@ -144,7 +143,7 @@ class User(db.Model):
     def house_message_count(self):
         count = 0
         for message in self.home.messages.all():
-            if message.author is not self:
+            if message.sender is not self:
                 count += 1
         return count
 
@@ -157,8 +156,12 @@ class User(db.Model):
     def sorted_chores(self):
         return self.chores.order_by(Chore.timestamp.desc())
 
-    def new_message_count(self):
-        return self.house_message_count() - self.read_messages
+    def unread_messages(self):
+        unread = 0
+        for m in self.messages:
+            if not m.read:
+                unread += 1
+        return unread
 
     def __repr__(self):
         return '<User %r>' % (self.username)
@@ -170,8 +173,8 @@ class Chore(db.Model):
     description = db.Column(db.String(140))
     status = db.Column(db.Boolean, default=False) #Initalize all chores as incompleted
     timestamp = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def get_id(self):
         try:
@@ -204,8 +207,16 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(500), index=True)
     timestamp = db.Column(db.DateTime)
+    read = db.Column(db.Boolean, default=False)
     house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    sender = db.relationship('User', foreign_keys='Message.sender_id')
+    receiver = db.relationship('User', foreign_keys='Message.receiver_id')
+
+
+
 
     def pretty_time(self):
         return str(self.timestamp)[0:-10]

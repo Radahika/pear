@@ -123,24 +123,23 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
 
                             <i class="fa fa-envelope-o" id="badge"></i>
-                             {% if user.new_message_count() > 0 %}
+                             {% if user.unread_messages() > 0 %}
                             <span class="badge bg-theme">
-                              {{ user.new_message_count() }}
+                              {{ user.unread_messages() }}
                             </span>
                             {% endif %}
                         </a>
                         <ul class="dropdown-menu extended inbox">
                             <div class="notify-arrow notify-arrow-green"></div>
                             <li>
-                            <p class="green">You have {{ user.new_message_count() }} new messages</p>
+                            <p class="green">You have {{ user.unread_messages() }} new messages</p>
                             </li>
                             {% for message in messages.items %}
-                            {% if message.author.username != user.username %}
                             <li>
-                            <a href="{{ url_for('user', username=message.author.username) }}">
+                            <a href="{{ url_for('user', username=message.sender.username) }}">
                                   <span class="photo"><img alt="avatar" src="{{ url_for('static', filename='images/pear.svg') }}"></span>
                                   <span class="subject">
-                                    <span class="from">{{ message.author.username }}</span>
+                                    <span class="from">{{ message.sender.username }}</span>
                                     <span class="time">{{ message.pretty_time() }}</span>
                                   </span>
                                   <span class="message">
@@ -148,7 +147,6 @@
                                   </span>
                                 </a>
                                 </li>
-                            {% endif %}
                             {% endfor %}
                             <li>
                                 <a href="index.html#">See all messages</a>
@@ -301,9 +299,34 @@
 
   </script>
 
+  <script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
+  <script type=text/javascript>
+    $(function() {
+        $("#badge").bind('click', function() {
+          $.getJSON($SCRIPT_ROOT + '/api/v1.0/message_box', {}, function(data) { $("#badge").text(data.result);
+            });
+          return false;
+          });
+        });
+  </script>
+
   <script>
     $("#badge").click(function() {
         alert("CLICK");
+        $.ajax({
+          type: "GET",
+          url: $SCRIPT_ROOT + "/api/v1.0/message_box",
+          contentType: "application/json; charset=utf-8"
+          data: {
+            format: 'json';
+            },
+          error: function() {
+            $('#info').html('<p>An error has occurred</p>');
+            },
+          dataType: 'jsonp',
+          });
     });
   </script>
 

@@ -29,18 +29,20 @@ def home(page=1, chore_page=1):
     user = g.user
     form = MessageForm()
     if form.validate_on_submit():
-        message = Message(message=form.message.data, timestamp=datetime.datetime.utcnow(), author=user, home=user.home)
+        message = Message(message=form.message.data, timestamp=datetime.datetime.utcnow(), sender=user, home=user.home, receiver=None)
         db.session.add(message)
         db.session.commit()
         flash('Your message is sent!')
         return redirect(url_for('home'))
-    messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
+    house_messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
+    messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
     chores = user.sorted_chores().paginate(chore_page, CHORES_PER_PAGE, False)
     return render_template('home.html',
                             title='Home',
                             user=user,
                             form=form,
                             messages=messages,
+                            personal_messages=personal_messages,
                             chores=chores)
 
 @app.route('/forgot_password')
@@ -172,7 +174,7 @@ def logout():
 def chores(page=1):
     user = g.user
     #return render_template('chores.html',title='Chores',user=user)
-    messages = user.house_messages().paginate(page, MESSAGES_PER_PAGE, False)
+    messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
     chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
     return render_template('todo_list.html',
                             title='Chores',
@@ -284,6 +286,8 @@ def make_public_task(task):
 @app.route('/todo/api/v1.0/tasks', methods = ['GET'])
 @auth.login_required
 def get_tasks():
+    print "get_tasks"
+    pdb.set_trace()
     return jsonify( { 'tasks': map(make_public_task, tasks) } )
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['GET'])
@@ -390,5 +394,10 @@ def get_resource():
 
 #end api test
 
-
+@app.route('/api/v1.0/message_box')
+@auth.login_required
+def message_box():
+    pdb.set_trace()
+    print "message!"
+    return jsonify({ 'data': 'Hello, %s!' %g.user.username })
 

@@ -22,9 +22,9 @@
                 </tr>
               </table>
             </form>
-            {% for message in messages.items %}
+            {% for message in house_messages.items %}
             <p>
-                {{ message.author.username }} says: <b>{{ message.message }}</b>
+                {{ message.sender.username }} says: <b>{{ message.message }}</b>
             </p>
             {% endfor %}
             {% if messages.has_prev %}<a href="{{ url_for('home', page=messages.prev_num) }}"><< Newer messages</a>{%
