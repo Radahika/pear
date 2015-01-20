@@ -13,3 +13,20 @@ a.user {
  padding-top: 5px;
 }
 
+
+.tasks-widget .task-list li .task-title .task-title-sp {
+  font-size: .8em;
+}
+
+.tasks-widget .task-list li .task-description .task-description-sp {
+  margin-right:5px;
+}
+
+.tasks-widget .task-list  li.task-done .task-description-sp  {
+  text-decoration:line-through;
+  color: #bbbbbb;
+}
+
+.button .btn-failure {
+
+}

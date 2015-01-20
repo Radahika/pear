@@ -179,9 +179,14 @@ class Chore(db.Model):
         except NameError:
             return str(self.id) # python 3
 
+    def get_status(self):
+        if self.status:
+            return 'Done'
+        return 'In Progress'
+
 
     def __repr__(self):
-        return '<Chore %r, Complete: %r>' % (self.title, self.status)
+        return '<Chore %r, Complete: %r>' % (self.title, self.get_status())
 
 class Event(db.Model):
     __tablename__ = 'event'
