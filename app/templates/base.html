@@ -47,7 +47,7 @@
                 <ul class="nav top-menu">
                     <!-- settings start -->
                     <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <i class="fa fa-tasks"></i>
                             {% if user.chore_count() > 0 %}
                             <span class="badge bg-theme">
@@ -61,7 +61,7 @@
                             <p class="green">You have {{ user.chore_count() }} pending tasks</p>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="#">
                                     <div class="task-info">
                                         <div class="desc">DashGum Admin Panel</div>
                                         <div class="percent">40%</div>
@@ -74,7 +74,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="#">
                                     <div class="task-info">
                                         <div class="desc">Database Update</div>
                                         <div class="percent">60%</div>
@@ -87,7 +87,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="#">
                                     <div class="task-info">
                                         <div class="desc">Product Development</div>
                                         <div class="percent">80%</div>
@@ -100,7 +100,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="#">
                                     <div class="task-info">
                                         <div class="desc">Payments Sent</div>
                                         <div class="percent">70%</div>
@@ -120,7 +120,7 @@
                     <!-- settings end -->
                     <!-- inbox dropdown start-->
                     <li id="header_inbox_bar" class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
                             <i class="fa fa-envelope-o" id="badge"></i>
                              {% if user.unread_messages() > 0 %}
@@ -149,7 +149,7 @@
                                 </li>
                             {% endfor %}
                             <li>
-                                <a href="index.html#">See all messages</a>
+                                <a href="#">See all messages</a>
                             </li>
                         </ul>
                     </li>
@@ -188,7 +188,7 @@
                       </a>
                       <ul class="sub">
                         <li><a href="{{ url_for('chores') }}">House Chores</a></li>
-                        <li><a  href="{{ url_for('chores') }}">Your Chores</a></li>
+                        <li><a  href="{{ url_for('personal_chores') }}">Your Chores</a></li>
                         <li><a  href="{{ url_for('calendar') }}">Calendar</a></li>
                       </ul>
                   </li>
@@ -292,32 +292,22 @@
     <!--script for this page-->
   <script>
       //custom select box
-
+/*
       $(function(){
           $('select.styled').customSelect();
       });
-
+*/
   </script>
 
   <script type=text/javascript>
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
-  <script type=text/javascript>
-    $(function() {
-        $("#badge").bind('click', function() {
-          $.getJSON($SCRIPT_ROOT + '/api/v1.0/message_box', {}, function(data) { $("#badge").text(data.result);
-            });
-          return false;
-          });
-        });
-  </script>
 
   <script>
     $("#badge").click(function() {
-        alert("CLICK");
-        $.ajax({
+        alert("CLICK")
+        $.ajax($SCRIPT_ROOT + "/api/v1.0/message_box", {
           type: "GET",
-          url: $SCRIPT_ROOT + "/api/v1.0/message_box",
           contentType: "application/json; charset=utf-8"
           data: {
             format: 'json';

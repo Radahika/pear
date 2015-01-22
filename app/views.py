@@ -41,8 +41,8 @@ def home(page=1, chore_page=1):
                             title='Home',
                             user=user,
                             form=form,
+                            house_messages=house_messages,
                             messages=messages,
-                            personal_messages=personal_messages,
                             chores=chores)
 
 @app.route('/forgot_password')
@@ -164,7 +164,6 @@ def settings():
 @app.route('/logout')
 @login_required
 def logout():
-    #pdb.set_trace()
     logout_user()
     return redirect(url_for('index'))
 
@@ -181,6 +180,21 @@ def chores(page=1):
                             user=user,
                             messages=messages,
                             chores=chores)
+
+
+@app.route('/personal_chores', methods=['GET', 'POST'])
+@app.route('/personal_chores/<int:page>', methods=['GET', 'POST'])
+@login_required
+def personal_chores(page=1):
+    user = g.user
+    return render_template('chores.html',title='Chores',user=user)    #messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
+    #chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
+    #return render_template('todo_list.html',
+                            #title='Chores',
+                            #user=user,
+                            #messages=messages,
+                            #chores=chores)
+
 
 @app.route('/calendar', methods=['GET', 'POST'])
 @app.route('/calendar/<int:page>', methods=['GET', 'POST'])
@@ -284,38 +298,40 @@ def make_public_task(task):
     return new_task
 
 @app.route('/todo/api/v1.0/tasks', methods = ['GET'])
-@auth.login_required
+@login_required
 def get_tasks():
-    print "get_tasks"
-    pdb.set_trace()
-    return jsonify( { 'tasks': map(make_public_task, tasks) } )
+    user = g.user
+    tasks = user.get_chores()
+    return jsonify( { 'tasks': tasks } )
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['GET'])
-@auth.login_required
+@login_required
 def get_task(task_id):
-    task = filter(lambda t: t['id'] == task_id, tasks)
+    user = g.user
+    chore = Chore.query.get(task_id)
+    task = user.get_chore(chore)
     if len(task) == 0:
         abort(404)
-    return jsonify( { 'task': make_public_task(task[0]) } )
+    return jsonify( { 'task': task } )
 
 @app.route('/todo/api/v1.0/tasks', methods = ['POST'])
-@auth.login_required
+@login_required
 def create_task():
+    user = g.user
     if not request.json or not 'title' in request.json:
         abort(400)
-    task = {
-        'id': tasks[-1]['id'] + 1,
-        'title': request.json['title'],
-        'description': request.json.get('description', ""),
-        'done': False
-    }
-    tasks.append(task)
-    return jsonify( { 'task': make_public_task(task) } ), 201
+    chore = Chore(title=request.json['title'], description=request.json.get('description', ""), status=False, timestamp=datetime.datetime.utcnow(), author=user, home=user.home)
+    db.session.add(chore)
+    db.session.commit()
+    return jsonify( { 'task': user.get_chores() } ), 201
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['PUT'])
-@auth.login_required
+@login_required
 def update_task(task_id):
-    task = filter(lambda t: t['id'] == task_id, tasks)
+    pdb.set_trace()
+    user = g.user
+    chore = Chore.query.get(task_id)
+    task = user.get_chore(chore)
     if len(task) == 0:
         abort(404)
     if not request.json:
@@ -326,18 +342,20 @@ def update_task(task_id):
         abort(400)
     if 'done' in request.json and type(request.json['done']) is not bool:
         abort(400)
-    task[0]['title'] = request.json.get('title', task[0]['title'])
-    task[0]['description'] = request.json.get('description', task[0]['description'])
-    task[0]['done'] = request.json.get('done', task[0]['done'])
-    return jsonify( { 'task': make_public_task(task[0]) } )
+    task.title = request.json.get('title', task.title)
+    task.description = request.json.get('decription', task.description)
+    task.status = request.json.get('done', task.status)
+    chore.title, chore.description, chore.status = task.title, task.description, task.done
+    db.session.add(chore)
+    db.session.commit()
+    return jsonify( { 'task': task } )
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['DELETE'])
-@auth.login_required
+@login_required
 def delete_task(task_id):
-    task = filter(lambda t: t['id'] == task_id, tasks)
-    if len(task) == 0:
-        abort(404)
-    tasks.remove(task[0])
+    task = task.query.get(task_id)
+    db.session.delete(task)
+    db.session.commit()
     return jsonify( { 'result': True } )
 
 @auth.verify_password
@@ -394,10 +412,10 @@ def get_resource():
 
 #end api test
 
-@app.route('/api/v1.0/message_box')
-@auth.login_required
+@app.route('/api/v1.0/message_box', methods=['GET'])
 def message_box():
     pdb.set_trace()
     print "message!"
     return jsonify({ 'data': 'Hello, %s!' %g.user.username })
+
 

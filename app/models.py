@@ -156,6 +156,17 @@ class User(db.Model):
     def sorted_chores(self):
         return self.chores.order_by(Chore.timestamp.desc())
 
+    def get_chores(self):
+        tasks = []
+        for chore in self.sorted_chores():
+            tasks.append({'title': str(chore.title), 'description': str(chore.description), 'done': chore.status, 'timestamp': chore.timestamp})
+        return tasks
+
+    def get_chore(self, chore):
+        task = []
+        tasks.append({'title': str(chore.title), 'description': str(chore.description), 'done': chore.status, 'timestamp': chore.timestamp})
+        return task
+
     def unread_messages(self):
         unread = 0
         for m in self.messages:
