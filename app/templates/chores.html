@@ -156,22 +156,22 @@
                 $('#edit').modal('show');
             }
             self.edit = function(task, data) {
-                self.ajax(task.uri(), 'PUT', data).done(function(res) {
+                self.ajax(self.tasksURI, 'PUT', data).done(function(res) {
                     self.updateTask(task, res.task);
                 });
             }
             self.remove = function(task) {
-                self.ajax(task.uri(), 'DELETE').done(function() {
+                self.ajax(self.tasksURI, 'DELETE').done(function() {
                     self.tasks.remove(task);
                 });
             }
             self.markInProgress = function(task) {
-                self.ajax(task.uri(), 'PUT', { done: false }).done(function(res) {
+                self.ajax(self.tasksURI, 'PUT', { done: false }).done(function(res) {
                     self.updateTask(task, res.task);
                 });
             }
             self.markDone = function(task) {
-                self.ajax(task.uri(), 'PUT', { done: true }).done(function(res) {
+                self.ajax(self.tasksURI, 'PUT', { done: true }).done(function(res) {
                     self.updateTask(task, res.task);
                 });
             }
