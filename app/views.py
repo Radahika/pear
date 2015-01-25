@@ -350,6 +350,7 @@ def update_task(task_id):
     db.session.commit()
     return jsonify( { 'task': task } )
 
+
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['DELETE'])
 @login_required
 def delete_task(task_id):
