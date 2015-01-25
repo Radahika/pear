@@ -162,11 +162,12 @@ div.img-leaf:hover {
 
 .icons {
     position: relative;
-    width: 20%;
+    width: 60%;
     opacity: 0.9;
+    padding-bottom: 15px;
 }
 
-div.footer {
+div.myfooter {
   text-align: center;
   background-color: #333;
   font-size: .8em;
@@ -185,7 +186,7 @@ div.footer {
   margin: 0 auto -2em;
 }
 
-.footer, .push {
+.myfooter, .push {
   height: 2em;
   clear: both;
 }
