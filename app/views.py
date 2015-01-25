@@ -20,6 +20,8 @@ def before_request():
 @app.route('/index')
 def index():
     user = g.user
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('home'))
     return render_template('index.html',title='index',user=user)
 
 @app.route('/home', methods=['GET', 'POST'])

@@ -50,21 +50,6 @@
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
-                        {% if g.user.is_authenticated() %}
-                        <li>
-                        <a class="page scroll" href="{{ url_for('home') }}">Home</a>
-                        </li>
-                        <li>
-                        <a class="page scroll" id="learn_more">Learn More</a>
-                        </li>
-                        <li>
-                        <a class="page-scroll" id="contact">Contact</a>
-                        </li>
-                        <li>
-                        <a class="page-scroll" href="{{ url_for('logout') }}">Logout</a>
-                        </li>
-                        {% endif %}
-
                 {% if not g.user.is_authenticated() %}
                         <li>
                         <a class="page-scroll" href="{{ url_for('login') }}">Log In</a>
