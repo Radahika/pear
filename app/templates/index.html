@@ -6,6 +6,17 @@
 <title>Housemates</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link href="{{ url_for('static', filename='agency/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+    <!-- Bootstrap Core CSS -->
+  <link href="{{ url_for('static', filename='agency/css/bootstrap.min.css') }}" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='agency/css/agency.css') }}" rel="stylesheet">
+
 </head>
 
 <body>
@@ -20,21 +31,130 @@
 <div class="wrapper">
 
 <section class="site">
-  <nav>
-    {% if g.user.is_authenticated() %}
-        <a href="{{ url_for('home') }}">Home</a>
-        <a id="learn_more">Learn More</a>
-        <a id="contact">Contact</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    {% endif %}
-    {% if not g.user.is_authenticated() %}
-        <a href="{{ url_for('login') }}">Log In</a>
-        <a href="{{ url_for('register') }}">Sign Up</a>
-        <a id="learn_more">Learn More</a>
-        <a id="contact">Contact</a>
-    {% endif %}
-  </nav>
+  <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                        {% if g.user.is_authenticated() %}
+                        <li>
+                        <a class="page scroll" href="{{ url_for('home') }}">Home</a>
+                        </li>
+                        <li>
+                        <a class="page scroll" id="learn_more">Learn More</a>
+                        </li>
+                        <li>
+                        <a class="page-scroll" id="contact">Contact</a>
+                        </li>
+                        <li>
+                        <a class="page-scroll" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                        {% endif %}
+
+                {% if not g.user.is_authenticated() %}
+                        <li>
+                        <a class="page-scroll" href="{{ url_for('login') }}">Log In</a>
+                        </li>
+                        <li>
+                        <a class="page-scroll" href="{{ url_for('register') }}">Sign Up</a>
+                        </li>
+                        <li>
+                        <a class="page-scroll" id="learn_more">Learn More</a>
+                        </li>
+                        <li>
+                        <a class="page-scroll" id="contact">Contact</a>
+                        </li>
+                {% endif %}
+             </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+            <!-- /.navbar-collapse -->
+
 <section class="contents" id="learn_more">
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Simplify Life</h2>
+                    <h3 class="section-subheading text-muted">Housemates takes the pain out of living with roomates by helping handle the more annoying parts of living together.</h3>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Finances</h4>
+                    <p class="text-muted">We keep track of dept so you don't have to. Just enter what you buy for the house and we will take care of notifying your roomates what they owe you. We'll even crunch the numbers.</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Balance Work</h4>
+                    <p class="text-muted">Someone not helping around the house? Relax. Tell Housemates the chores and we will rotate through the roommates to keep track of whose turn it is.</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Talk It Out</h4>
+                    <p class="text-muted">Housemates gives you a place to talk all things house related. We give you a centralized comment board to leave messages, as well as anonymous comments.</p>
+                </div>
+            </div>
+            <div>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Track Bills</h4>
+                    <p class="text-muted">We can remind you when your bills are due so you can avoid getting the power turned off on you during your parties! We can even let your roommates know how much they owe you each month.</p>
+                 </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Privacy</h4>
+                    <p class="text-muted">Your room gets its own unique access code, ensuring that other users can't see your data.
+              </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Celebrate</h4>
+                    <p class="text-muted">Be a better roommate, and live with better people. We make it easy to focus on the good times by handling the dirty work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
   <div class="img-box">
     <div class="img-leaf"><p class="img-label">Simplify Life<br>

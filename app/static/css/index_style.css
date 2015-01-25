@@ -84,13 +84,13 @@ header .overlay {
   text-decoration: none;
 }
 
-.site a:hover { color: #222; }
+.site a:hover { color: #333; }
 
 .site nav {
   position: absolute;
   top: 0;
   left: 0;
-  background: #222;
+  background: #333;
   width: 100%
 }
 
@@ -167,7 +167,6 @@ div.img-leaf:hover {
 }
 
 div.footer {
-  padding: 5em 0;
   text-align: center;
   background-color: #333;
   font-size: .8em;
