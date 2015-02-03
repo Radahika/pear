@@ -5,12 +5,6 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 import sys
 import pdb
 
-followers = db.Table(
-    'followers',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-)
-
 class House(db.Model):
     __tablename__ = 'house'
     id = db.Column(db.Integer, primary_key=True)
@@ -53,15 +47,11 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     token = db.Column(db.String(128))
     email = db.Column(db.String(120), index=True, unique=True)
+    phone_number = db.Column(db.String(10))
     house_id = db.Column(db.Integer, db.ForeignKey('house.id'))
     chores = db.relationship('Chore', backref='author', lazy='dynamic')
-    followed = db.relationship('User',
-                               secondary=followers,
-                               primaryjoin=(followers.c.follower_id == id),
-                               secondaryjoin=(followers.c.followed_id == id),
-                               backref=db.backref('followers', lazy='dynamic'),
-                               lazy='dynamic')
     messages = db.relationship('Message', backref='Message.sender_id', primaryjoin='User.id==Message.receiver_id', lazy='dynamic')
+
 
     def sorted_messages(self):
         return self.messages.order_by(Message.timestamp.desc())
@@ -92,19 +82,6 @@ class User(db.Model):
                 break
             version += 1
         return new_username
-
-    def follow(self, user):
-        if not self.is_following(user):
-            self.followed.append(user)
-            return self
-
-    def unfollow(self, user):
-        if self.is_following(user):
-            self.followed.remove(user)
-            return self
-
-    def is_following(self, user):
-        return self.followed.filter(followers.c.followed_id == user.id).count()
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
