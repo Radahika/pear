@@ -12,3 +12,7 @@ except twilio.TwilioRestException as e:
     print e
 print message.sid
 
+@app.route('/twilio/send_message')
+def send_message():
+    user = g.user
+    
