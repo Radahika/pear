@@ -4,7 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 import twilio
-from twilio.rest import TwilioRestClient
+#from twilio.rest import TwilioRestClient
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_NUMBER
 
 app = Flask(__name__)
@@ -46,10 +46,10 @@ if os.environ.get('HEROKU') is not None:
     app.logger.setLevel(logging.INFO)
     app.logger.info('pear-soap startup')
 
-try:
-    client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-except twilio.TwilioRestException as e:
-    print e
+#try:
+ #   client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+#except twilio.TwilioRestException as e:
+ #   print e
 
-from app import views, twilio_views, models
+from app import views, models #, twilio_views
 
