@@ -32,4 +32,3 @@ sqlparse==0.1.11
 Flask-HTTPAuth==2.3.0
 requests==2.3.0
 passlib==1.6.2
-twilio==3.3.6
