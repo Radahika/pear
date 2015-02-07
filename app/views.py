@@ -274,6 +274,11 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
+"""
+
+API Section below
+
+"""
 #start api test
 auth = HTTPBasicAuth()
 
@@ -284,11 +289,31 @@ def unauthorized():
 
 @app.errorhandler(400)
 def bad_request(error):
-    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
+    return make_response(jsonify( { 'error': 'Bad request', 'message': error} ), 400)
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify( { 'error': 'Not found' } ), 404)
+
+@app.route('/api/v1.0/login')
+def get_auth_token():
+    username = request.args.get('username')
+    password = request.args.get('password')
+    print "HERE"
+    if not verify_password(username, password):
+        return make_response(jsonify({'error': 'Bad request', 'message': 'username and password not accepted.', 'code': 'invalid_username_password'}), 400)
+    user = User.query.filter_by(username=username).first()
+    g.user = user
+    token = g.user.generate_auth_token(600)
+    return make_response(jsonify({'token': token.decode('ascii'), 'duration': 600}), 200)
+
+
+@app.route('/api/v1.0/logout')
+@auth.login_required
+def remove_auth_token(user):
+    user.invalidate_auth_token()
+    return make_response(jsonify( { 'status': '200' } ), 200)
+
 
 def make_public_task(task):
     new_task = {}
@@ -330,7 +355,6 @@ def create_task():
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['PUT'])
 @login_required
 def update_task(task_id):
-    pdb.set_trace()
     user = g.user
     chore = Chore.query.get(task_id)
     task = user.get_chore(chore)
@@ -394,18 +418,6 @@ def get_user(id):
         abort(400)
     return jsonify({'username': user.username})
 
-@app.route('/api/v1.0/login')
-def get_auth_token():
-    token = g.user.generate_auth_token(600)
-    return jsonify({'token': token.decode('ascii'), 'duration': 600})
-
-
-@app.route('/api/v1.0/logout')
-@auth.login_required
-def remove_auth_token(user):
-    user.invalidate_auth_token()
-    return make_response(jsonify( { 'status': '200' } ), 200)
-
 @app.route('/api/v1.0/resource')
 @auth.login_required
 def get_resource():
@@ -415,8 +427,6 @@ def get_resource():
 
 @app.route('/api/v1.0/message_box', methods=['GET'])
 def message_box():
-    pdb.set_trace()
     print "message!"
     return jsonify({ 'data': 'Hello, %s!' %g.user.username })
-
 
