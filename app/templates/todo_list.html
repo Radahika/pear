@@ -47,7 +47,7 @@
 
                               <div class=" add-task-row">
                                   <a data-bind="click: beginAdd" class="btn btn-success btn-sm pull-left" href="#" data-toggle="modal" data-target="#basicModal">Add New Tasks</a>
-                                  <!-- modal markup start --> 
+                                  <!-- modal markup start -->
                                   <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
                                     <div class="modal-dialog">
                                       <div class="modal-content">
@@ -102,14 +102,14 @@
             $('#basicModal').modal(options);
             });
     </script>
-  <script>
-      //custom select box
+  <!--<script>-->
+      <!--//custom select box-->
 
-      //$(function(){
-      //    $('select.styled').customSelect();
-      //});
+      <!--//$(function(){-->
+      <!--//    $('select.styled').customSelect();-->
+      <!--//});-->
 
-    </script>
+    <!--</script>-->
     <script type=text/javascript>
       $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
@@ -121,19 +121,52 @@ $(document).ready(function() {
       var title = $("#inputTask").val();
       var description = $("#inputDescription").val();
       $.ajax(tasksURI, {
-        url: tasksURI,
-        type: "POST",
-        contentType: "application/json",
-        accepts: "application/json",
-        cache: false,
-        dataType: 'json',
-        data: JSON.stringify({'title': title,
-               'description': description }),
-       });
+          url: tasksURI,
+          type: "POST",
+          contentType: "application/json",
+          accepts: "application/json",
+          cache: false,
+          dataType: 'json',
+          data: JSON.stringify({'title': title,
+                 'description': description }),
+          success: function(data) {
+            var task = data.task[0];
+            var template = $("#choreTemplate").html();
+            Mustache.parse(template);
+            var rendered = Mustache.render(template, {"title": task.title, "status": task.done, "description": task.description});
+            console.log(rendered);
+            $(".task-list").prepend(rendered);
+          }
+         });
       });
     });
 
     </script>
+
+
+    {% raw %}
+    <script id="choreTemplate" type="x-tmpl-mustache">
+      <li>
+      <div class="task-checkbox">
+        <input type="checkbox" class="list-child" value=""  />
+      </div>
+      <div class="task-title">
+        <span class="task-title-sp"><b>{{ title }}</b></span>
+        <span class="badge bg-theme">{{ status }}</span>
+        <div class="pull-right hidden-phone">
+          <button class="btn btn-success btn-xs"><i class=" fa fa-check"></i></button>
+          <button class="btn btn-primary btn-xs" id="edit"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-danger btn-xs" id="delete"><i class="fa fa-trash-o "></i></button>
+        </div>
+      </div>
+      <div class="task-description">
+        <span class="task-desciption-sp">{{ description }}</span>
+      </div>
+      </li>
+    </div>
+    </script>
+    {% endraw %}
+
 
 {% endblock %}
 
