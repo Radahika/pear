@@ -1,5 +1,12 @@
         {% extends "base.html" %}
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{{ url_for('static', filename='assets/js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery-ui-1.9.2.custom.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.ui.touch-punch.min.js') }}"></script>
+    <script class="include" type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dcjqaccordion.2.7.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.scrollTo.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.nicescroll.js') }}" type="text/javascript"></script>
         <script>window.jQuery || document.write('<script src="{{
           url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
         {% block content %}
@@ -39,7 +46,35 @@
                               </div>
 
                               <div class=" add-task-row">
-                                  <a data-bind="click: beginAdd" class="btn btn-success btn-sm pull-left" href="todo_list.html#">Add New Tasks</a>
+                                  <a data-bind="click: beginAdd" class="btn btn-success btn-sm pull-left" href="#" data-toggle="modal" data-target="#basicModal">Add New Tasks</a>
+                                  <!-- modal markup start --> 
+                                  <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                          <h4 class="modal-title" id="myModalLabel">Add Chore</h4>
+                                          </div>
+                                          <div class="modal-body">
+                                              <form role="form">
+                                                <div class="form-group">
+                                                  <label for="title">Task Title</label>
+                                                    <input data-bind="value: title" type="text" class="form-control" id="inputTask" placeholder="Task title" style="width: 150px;">
+                                                </div>
+                                                <div class="form-group">
+                                                  <label for="description">Task Description</label>
+                                                    <input data-bind="value: description" type="text" class="form-control" id="inputDescription" placeholder="Description" style="width: 300px;">
+                                                </div>
+                                              </form>
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                              <button type="button" class="btn btn-primary" id="addbutton">Save changes</button>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- modal markup end-->
                                   <a class="btn btn-default btn-sm pull-right" href="todo_list.html#">See All Tasks</a>
                               </div>
                           </div>
@@ -48,7 +83,6 @@
                 </div><!-- /row -->
 
     <!--script for this page-->
-	  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="{{ url_for('static', filename='assets/js/tasks.js') }}" type="text/javascript"></script>
 
     <script>
@@ -62,31 +96,27 @@
       });
 
     </script>
+    <script>
+        $(document).ready(function() {
+            var options = { "backdrop" : "true" };
+            $('#basicModal').modal(options);
+            });
+    </script>
   <script>
       //custom select box
 
-      $(function(){
-          $('select.styled').customSelect();
-      });
+      //$(function(){
+      //    $('select.styled').customSelect();
+      //});
 
-  </script>
-
-  <script type=text/javascript>
-    function markDone() {
-      $.post('/markDone', {
-          status: 'Done'
-        });
-    }
-
-  </script>
-
+    </script>
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
     <script type="text/javascript">
         function TasksViewModel() {
             var self = this;
-            self.tasksURI = 'http://localhost:5000/todo/api/v1.0/tasks';
-            self.username = "";
-            self.password = "";
-            self.tasks = ko.observableArray();
+            self.tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
 
             self.ajax = function(uri, method, data) {
                 var request = {
@@ -107,106 +137,13 @@
                 };
                 return $.ajax(request);
             }
-            self.updateTask = function(task, newTask) {
-                var i = self.tasks.indexOf(task);
-                self.tasks()[i].uri(newTask.uri);
-                self.tasks()[i].title(newTask.title);
-                self.tasks()[i].description(newTask.description);
-                self.tasks()[i].done(newTask.done);
-            }
+        }
 
-            self.beginAdd = function() {
-                $('#add').modal('show');
-            }
-            self.add = function(task) {
-                self.ajax(self.tasksURI, 'POST', task).done(function(data) {
-                    self.tasks.push({
-                        uri: ko.observable(data.task.uri),
-                        title: ko.observable(data.task.title),
-                        description: ko.observable(data.task.description),
-                        done: ko.observable(data.task.done)
-                    });
-                });
-            }
-            self.beginEdit = function(task) {
-                editTaskViewModel.setTask(task);
-                $('#edit').modal('show');
-            }
-            self.edit = function(task, data) {
-                self.ajax(task.uri(), 'PUT', data).done(function(res) {
-                    self.updateTask(task, res.task);
-                });
-            }
-            self.remove = function(task) {
-                self.ajax(task.uri(), 'DELETE').done(function() {
-                    self.tasks.remove(task);
-                });
-            }
-            self.markInProgress = function(task) {
-                self.ajax(task.uri(), 'PUT', { done: false }).done(function(res) {
-                    self.updateTask(task, res.task);
-                });
-            }
-            self.markDone = function(task) {
-                self.ajax(task.uri(), 'PUT', { done: true }).done(function(res) {
-                    self.updateTask(task, res.task);
-                });
-            }
-            self.ajax(self.tasksURI, 'GET').done(function(data) {
-                for (var i = 0; i < data.tasks.length; i++) {
-                    self.tasks.push({
-                        uri: ko.observable(data.tasks[i].uri),
-                        title: ko.observable(data.tasks[i].title),
-                        description: ko.observable(data.tasks[i].description),
-                        done: ko.observable(data.tasks[i].done)
-                    });
-                }
+        $(document).ready(function() {
+            $("#addbutton").click(function() {
+              alert("yes!");
+              });
             });
-        }
-        function AddTaskViewModel() {
-            var self = this;
-            self.title = ko.observable();
-            self.description = ko.observable();
-
-            self.addTask = function() {
-                $('#add').modal('hide');
-                tasksViewModel.add({
-                    title: self.title(),
-                    description: self.description()
-                });
-                self.title("");
-                self.description("");
-            }
-        }
-        function EditTaskViewModel() {
-            var self = this;
-            self.title = ko.observable();
-            self.description = ko.observable();
-            self.done = ko.observable();
-
-            self.setTask = function(task) {
-                self.task = task;
-                self.title(task.title());
-                self.description(task.description());
-                self.done(task.done());
-                $('edit').modal('show');
-            }
-
-            self.editTask = function() {
-                $('#edit').modal('hide');
-                tasksViewModel.edit(self.task, {
-                    title: self.title(),
-                    description: self.description() ,
-                    done: self.done()
-                });
-            }
-        }
-        var tasksViewModel = new TasksViewModel();
-        var addTaskViewModel = new AddTaskViewModel();
-        var editTaskViewModel = new EditTaskViewModel();
-        ko.applyBindings(tasksViewModel, $('#main')[0]);
-        ko.applyBindings(addTaskViewModel, $('#add')[0]);
-        ko.applyBindings(editTaskViewModel, $('#edit')[0]);
 
     </script>
 

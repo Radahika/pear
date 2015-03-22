@@ -20,6 +20,16 @@
     <link href="{{ url_for('static', filename='css/home_style.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/to-do.css') }}">
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{{ url_for('static', filename='assets/js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery-ui-1.9.2.custom.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.ui.touch-punch.min.js') }}"></script>
+    <script class="include" type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dcjqaccordion.2.7.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.scrollTo.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.nicescroll.js') }}" type="text/javascript"></script>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -275,14 +285,6 @@
       <!--footer end-->
   </section>
 
-    <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='assets/js/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery-ui-1.9.2.custom.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery.ui.touch-punch.min.js') }}"></script>
-    <script class="include" type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dcjqaccordion.2.7.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery.scrollTo.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery.nicescroll.js') }}" type="text/javascript"></script>
 
 
     <!--common script for all pages-->
@@ -291,11 +293,9 @@
     <!--script for this page-->
   <script>
       //custom select box
-/*
       $(function(){
           $('select.styled').customSelect();
       });
-*/
   </script>
 
   <script type=text/javascript>
@@ -307,9 +307,9 @@
         alert("CLICK")
         $.ajax($SCRIPT_ROOT + "/api/v1.0/message_box", {
           type: "GET",
-          contentType: "application/json; charset=utf-8"
+          contentType: "application/json; charset=utf-8",
           data: {
-            format: 'json';
+            format: 'json'
             },
           error: function() {
             $('#info').html('<p>An error has occurred</p>');
