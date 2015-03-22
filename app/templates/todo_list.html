@@ -59,11 +59,11 @@
                                               <form role="form">
                                                 <div class="form-group">
                                                   <label for="title">Task Title</label>
-                                                    <input data-bind="value: title" type="text" class="form-control" id="inputTask" placeholder="Task title" style="width: 150px;">
+                                                    <input type="text" class="form-control" id="inputTask" placeholder="Task title" style="width: 150px;">
                                                 </div>
                                                 <div class="form-group">
                                                   <label for="description">Task Description</label>
-                                                    <input data-bind="value: description" type="text" class="form-control" id="inputDescription" placeholder="Description" style="width: 300px;">
+                                                    <input type="text" class="form-control" id="inputDescription" placeholder="Description" style="width: 300px;">
                                                 </div>
                                               </form>
                                           </div>
@@ -114,36 +114,24 @@
       $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
     <script type="text/javascript">
-        function TasksViewModel() {
-            var self = this;
-            self.tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
 
-            self.ajax = function(uri, method, data) {
-                var request = {
-                    url: uri,
-                    type: method,
-                    contentType: "application/json",
-                    accepts: "application/json",
-                    cache: false,
-                    dataType: 'json',
-                    data: JSON.stringify(data),
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization",
-                            "Basic " + btoa(self.username + ":" + self.password));
-                    },
-                    error: function(jqXHR) {
-                        console.log("ajax error " + jqXHR.status);
-                    }
-                };
-                return $.ajax(request);
-            }
-        }
-
-        $(document).ready(function() {
-            $("#addbutton").click(function() {
-              alert("yes!");
-              });
-            });
+$(document).ready(function() {
+    $("#addbutton").click(function() {
+      var tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
+      var title = $("#inputTask").val();
+      var description = $("#inputDescription").val();
+      $.ajax(tasksURI, {
+        url: tasksURI,
+        type: "POST",
+        contentType: "application/json",
+        accepts: "application/json",
+        cache: false,
+        dataType: 'json',
+        data: JSON.stringify({'title': title,
+               'description': description }),
+       });
+      });
+    });
 
     </script>
 
