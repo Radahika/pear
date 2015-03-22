@@ -1,0 +1,5 @@
+flask/*
+tmp/*
+search.db/*
+__pycache__/*
+*.pyc
