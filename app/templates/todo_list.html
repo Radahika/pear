@@ -30,10 +30,14 @@
                                           </div>
                                           <div class="task-title">
                                             <span class="task-title-sp"><b>{{ chore.title }}</b></span>
-                                            <span class="badge bg-theme">{{ chore.get_status() }}</span>
+                                            {% if chore.get_status() == "Done" %}
+                                                <span class="badge bg-theme" id="{{ chore.id }}" >{{ chore.get_status() }}</span>
+                                            {% else %}
+                                                <span class="badge bg-important" id="{{ chore.id }}" >{{ chore.get_status() }}</span>
+                                            {% endif %}
                                               <div class="pull-right hidden-phone">
-                                                  <button class="btn btn-success btn-xs check"><i class=" fa fa-check"></i></button>
-                                                  <button class="btn btn-primary btn-xs edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-success btn-xs check" data-choreid="{{ chore.id }}"><i class=" fa fa-check"></i></button>
+                                                  <button class="btn btn-primary btn-xs edit" data-choreid="{{ chore.id }}"><i class="fa fa-pencil"></i></button>
                                                   <button class="btn btn-danger btn-xs delete" data-choreid="{{ chore.id }}"><i class="fa fa-trash-o "></i></button>
                                               </div>
                                           </div>
@@ -124,41 +128,75 @@
     <script type="text/javascript">
 
     $(document).ready(function() {
-        var tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
+        var self = this;
+        tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
+        ajax = function(uri, method, data, success_func) {
+                var request = {
+                    url: uri,
+                    type: method,
+                    contentType: "application/json",
+                    accepts: "application/json",
+                    cache: false,
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization",
+                            "Basic " + btoa(self.username + ":" + self.password));
+                    },
+                    error: function(jqXHR) {
+                        console.log("ajax error " + jqXHR.status);
+                    },
+                    success: success_func
+                };
+                return $.ajax(request);
+            }
+
         $("#addbutton").click(function() {
             var options = { "backdrop" : "true" };
             $('#basicModal').modal(options);
             var title = $("#inputTask").val();
             var description = $("#inputDescription").val();
-            $.ajax(tasksURI, {
-                url: tasksURI,
-                type: "POST",
-                contentType: "application/json",
-                accepts: "application/json",
-                cache: false,
-                dataType: 'json',
-                data: JSON.stringify({'title': title,
-                       'description': description }),
-                success: function(data) {
+            data = {'title': title, 'description': description };
+            function onSuccess(data) {
                   var task = data.task[0];
                   var template = $("#choreTemplate").html();
                   Mustache.parse(template);
-                  var rendered = Mustache.render(template, {"title": task.title, "status": task.done, "description": task.description});
+                  console.log(task.id, task.done);
+                  $(task.id).addClass("bg-important");
+                  complete = false;
+                  if (task.done == "Done") {
+                        complete = true;
+                   }
+                  var rendered = Mustache.render(template, {"id": task.id, "title": task.title, "status": task.done, "description": task.description, "complete": complete});
                   $(".task-list").prepend(rendered);
                   $("#basicModal").modal('hide');
-                }
-               });
-          });
+            };
+            ajax(tasksURI, "POST", data, onSuccess);
+            });
 
       $(".delete").click(function() {
           var options = { "backdrop" : "true" };
           $("#deleteModal").modal(options);
           var chore_id = $(this).data("choreid");
           var item = $(this);
-          console.log(item);
+          var task_url = tasksURI + "/" + chore_id
+          function onSuccess(data) {
+            var selector = "[data-choreid=" + chore_id + "]";
+            $(selector).hide();
+            var result = data.result;
+            $("#deleteModal").modal('hide');
+            if (result) {
+                var template = $("#choreTemplate").html();
+                Mustache.parse(template);
+            }
+          };
           $("#deletebutton").click(function() {
-              $.ajax(tasksURI + "/" + chore_id, {
-                url: tasksURI,
+              ajax(task_url, "DELETE", "", onSuccess);
+          });
+      });
+/*          $("#deletebutton").click(function() {
+              $.ajax(task_url,  {
+                url: task_url,
                 type: "DELETE",
                 contentType: "application/json",
                 accepts: "application/json",
@@ -174,8 +212,22 @@
                         Mustache.parse(template);
                     }
                 }
-                });
             });
+            */
+
+        $(".check").click(function() {
+            var chore_id = $(this).data("choreid");
+            var task_url = tasksURI + "/" + chore_id;
+            chore_id = '#' + chore_id;
+            var result = $(chore_id).text() == "Done" ? false : true;
+            var data = {'done': result};
+            function onSuccess(data) {
+                var task = data.task[0];
+                $(chore_id).toggleClass('bg-important bg-theme');
+                var text = $(chore_id).text();
+                $(chore_id).text(task.done);
+            };
+            ajax(task_url, "PUT", data, onSuccess);
         });
     });
 
@@ -184,17 +236,20 @@
 
     {% raw %}
     <script id="choreTemplate" type="x-tmpl-mustache">
-      <li>
+      <li data-choreid={{ id }}>
       <div class="task-checkbox">
         <input type="checkbox" class="list-child" value=""  />
       </div>
       <div class="task-title">
         <span class="task-title-sp"><b>{{ title }}</b></span>
-        <span class="badge bg-theme">{{ status }}</span>
+        {{#complete}}
+            <span class="badge bg-theme">{{ status }}</span>
+        {{/complete}}
+            <span class="badge bg-important">{{ status }}</span>
         <div class="pull-right hidden-phone">
-          <button class="btn btn-success btn-xs"><i class=" fa fa-check"></i></button>
-          <button class="btn btn-primary btn-xs" id="edit"><i class="fa fa-pencil"></i></button>
-          <button class="btn btn-danger btn-xs" id="delete"><i class="fa fa-trash-o "></i></button>
+          <button class="btn btn-success btn-xs check" data-choreid={{ id }}><i class=" fa fa-check"></i></button>
+          <button class="btn btn-primary btn-xs edit" data-choreid={{ id }}><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-danger btn-xs delete" data-choreid={{ id }}><i class="fa fa-trash-o "></i></button>
         </div>
       </div>
       <div class="task-description">
@@ -204,7 +259,6 @@
     </div>
     </script>
     {% endraw %}
-
 
 
 {% endblock %}

@@ -352,29 +352,31 @@ def create_task():
     db.session.commit()
     return jsonify( { 'task': user.get_chore(chore) } ), 201
 
-@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['PUT'])
+@app.route('/todo/api/v1.0/tasks/<int:chore_id>', methods = ['PUT'])
 @login_required
-def update_task(task_id):
+def update_chore(chore_id):
     user = g.user
-    chore = Chore.query.get(task_id)
-    task = user.get_chore(chore)
-    if len(task) == 0:
+    chore = Chore.query.get(chore_id)
+    chore_dict = user.get_chore(chore)
+    if len(chore_dict) == 0:
         abort(404)
     if not request.json:
         abort(400)
-    if 'title' in request.json and type(request.json['title']) != unicode:
-        abort(400)
-    if 'description' in request.json and type(request.json['description']) is not unicode:
-        abort(400)
-    if 'done' in request.json and type(request.json['done']) is not bool:
-        abort(400)
-    task.title = request.json.get('title', task.title)
-    task.description = request.json.get('decription', task.description)
-    task.status = request.json.get('done', task.status)
-    chore.title, chore.description, chore.status = task.title, task.description, task.done
+    if 'title' in request.json or 'description' in request.json or type(request.json['done']) is not bool:
+        if 'title' in request.json and type(request.json['title']) != unicode:
+            abort(400)
+        if 'description' in request.json and type(request.json['description']) is not unicode:
+            abort(400)
+        if 'done' in request.json and type(request.json['done']) is not bool:
+            abort(400)
+        chore.title = request.json.get('title')
+        chore.description = request.json.get('decription')
+        chore.status = request.json.get('done')
+    else:
+        chore.status = request.json.get('done')
     db.session.add(chore)
     db.session.commit()
-    return jsonify( { 'task': task } )
+    return jsonify( { 'task': user.get_chore(chore) }), 200
 
 @app.route('/todo/api/v1.0/tasks/<int:chore_id>', methods = ['DELETE'])
 @login_required

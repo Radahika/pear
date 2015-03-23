@@ -141,7 +141,7 @@ class User(db.Model):
 
     def get_chore(self, chore):
         task = []
-        task.append({'title': str(chore.title), 'description': str(chore.description), 'done': chore.get_status(), 'timestamp': chore.timestamp})
+        task.append({'id': chore.id, 'title': str(chore.title), 'description': str(chore.description), 'done': chore.get_status(), 'timestamp': chore.timestamp})
         return task
 
     def unread_messages(self):
