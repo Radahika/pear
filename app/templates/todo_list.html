@@ -134,8 +134,8 @@ $(document).ready(function() {
             var template = $("#choreTemplate").html();
             Mustache.parse(template);
             var rendered = Mustache.render(template, {"title": task.title, "status": task.done, "description": task.description});
-            console.log(rendered);
             $(".task-list").prepend(rendered);
+            $("#basicModal").modal('hide');
           }
          });
       });
