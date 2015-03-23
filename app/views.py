@@ -333,13 +333,13 @@ def get_tasks():
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['GET'])
 @login_required
-def get_task(task_id):
+def get_task(chore_id):
     user = g.user
-    chore = Chore.query.get(task_id)
-    task = user.get_chore(chore)
-    if len(task) == 0:
+    chore = Chore.query.get(chore_id)
+    chore = user.get_chore(chore)
+    if len(chore) == 0:
         abort(404)
-    return jsonify( { 'task': task } )
+    return jsonify( { 'task': chore } )
 
 @app.route('/todo/api/v1.0/tasks', methods = ['POST'])
 @login_required
@@ -350,7 +350,7 @@ def create_task():
     chore = Chore(title=request.json['title'], description=request.json.get('description', ""), status=False, timestamp=datetime.datetime.utcnow(), author=user, home=user.home)
     db.session.add(chore)
     db.session.commit()
-    return jsonify( { 'task': user.get_chores() } ), 201
+    return jsonify( { 'task': user.get_chore(chore) } ), 201
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['PUT'])
 @login_required
@@ -376,11 +376,11 @@ def update_task(task_id):
     db.session.commit()
     return jsonify( { 'task': task } )
 
-@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods = ['DELETE'])
+@app.route('/todo/api/v1.0/tasks/<int:chore_id>', methods = ['DELETE'])
 @login_required
-def delete_task(task_id):
-    task = task.query.get(task_id)
-    db.session.delete(task)
+def delete_task(chore_id):
+    chore = Chore.query.get(chore_id)
+    db.session.delete(chore)
     db.session.commit()
     return jsonify( { 'result': True } )
 
