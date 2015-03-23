@@ -97,10 +97,11 @@
 
     </script>
     <script>
+/*
         $(document).ready(function() {
             var options = { "backdrop" : "true" };
             $('#basicModal').modal(options);
-            });
+            }); */
     </script>
   <!--<script>-->
       <!--//custom select box-->
@@ -117,29 +118,31 @@
 
 $(document).ready(function() {
     $("#addbutton").click(function() {
-      var tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
-      var title = $("#inputTask").val();
-      var description = $("#inputDescription").val();
-      $.ajax(tasksURI, {
-          url: tasksURI,
-          type: "POST",
-          contentType: "application/json",
-          accepts: "application/json",
-          cache: false,
-          dataType: 'json',
-          data: JSON.stringify({'title': title,
-                 'description': description }),
-          success: function(data) {
-            var task = data.task[0];
-            var template = $("#choreTemplate").html();
-            Mustache.parse(template);
-            var rendered = Mustache.render(template, {"title": task.title, "status": task.done, "description": task.description});
-            $(".task-list").prepend(rendered);
-            $("#basicModal").modal('hide');
-          }
-         });
+        var options = { "backdrop" : "true" };
+        $('#basicModal').modal(options);
+        var tasksURI = $SCRIPT_ROOT +'todo/api/v1.0/tasks';
+        var title = $("#inputTask").val();
+        var description = $("#inputDescription").val();
+        $.ajax(tasksURI, {
+            url: tasksURI,
+            type: "POST",
+            contentType: "application/json",
+            accepts: "application/json",
+            cache: false,
+            dataType: 'json',
+            data: JSON.stringify({'title': title,
+                   'description': description }),
+            success: function(data) {
+              var task = data.task[0];
+              var template = $("#choreTemplate").html();
+              Mustache.parse(template);
+              var rendered = Mustache.render(template, {"title": task.title, "status": task.done, "description": task.description});
+              $(".task-list").prepend(rendered);
+              $("#basicModal").modal('hide');
+            }
+           });
+        });
       });
-    });
 
     </script>
 
