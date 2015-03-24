@@ -22,7 +22,7 @@ def index():
     user = g.user
     if g.user is not None and g.user.is_authenticated():
         return redirect(url_for('home'))
-    return render_template('index.html',title='index',user=user)
+    return render_template('index.html',title='index', user=user)
 
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/home/<int:page>', methods=['GET', 'POST'])
@@ -145,10 +145,6 @@ def login():
         session['remember_me'] = form.remember_me.data
         username = form.username.data.lower()
         password = form.password.data
-        #if not username:
-            #flash("Please enter a username")
-        #if not password:
-            #flash("Please enter a password")
         result = verify_password(username, password)
         if result:
             login_user(g.user, remember=session['remember_me'])
@@ -177,7 +173,7 @@ def chores(page=1):
     #return render_template('chores.html',title='Chores',user=user)
     messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
     chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
-    return render_template('todo_list.html',
+    return render_template('chores.html',
                             title='Chores',
                             user=user,
                             messages=messages,
@@ -189,13 +185,14 @@ def chores(page=1):
 @login_required
 def personal_chores(page=1):
     user = g.user
-    return render_template('chores.html',title='Chores',user=user)    #messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
-    #chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
-    #return render_template('todo_list.html',
-                            #title='Chores',
-                            #user=user,
-                            #messages=messages,
-                            #chores=chores)
+    #return render_template('chores.html',title='Chores',user=user)
+    messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
+    chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
+    return render_template('chores.html',
+                            title='Chores',
+                            user=user,
+                            messages=messages,
+                            chores=chores)
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
@@ -217,53 +214,18 @@ def user(username, page=1):
     if user == None:
         flash('User %s not found.' % username)
         return redirect(url_for('index'))
-    chores = user.house_messages().paginate(page, CHORES_PER_PAGE, False)
+    messages = user.messages.paginate(page, MESSAGES_PER_PAGE, False)
+    chores = user.sorted_chores().paginate(page, CHORES_PER_PAGE, False)
     return render_template('user.html',
+                            title='Profile',
                             user=user,
+                            messages=messages,
                             chores=chores)
 
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
     form = EditForm(g.user.username)
-
-@app.route('/follow/<username>')
-@login_required
-def follow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flask('User %s not found.' % username)
-        return redirect(url_for('index'))
-    if user == g.user:
-        flask('You can\'t follow yourself!')
-        return redirect(url_for('user', username=username))
-    u = g.user.follow(user)
-    if u is None:
-        flask('Cannot follow ' + username + '.')
-        return redirect(url_for('user', username=username))
-    db.session.add(u)
-    db.session.commit()
-    flash('You are now following ' + username + '!')
-    return redirect(url_for('user', username=username))
-
-@app.route('/unfollow/<username>')
-@login_required
-def unfollow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash('User %s not found.' % username)
-        return redirect(url_for('index'))
-    if user == g.user:
-        flash('You can\'t unfollow yourself!')
-        return redirect(url_for('user', username=username))
-    u = g.user.unfollow(user)
-    if u is None:
-        flash('Cannot unfollow ' + username + '.')
-        return redirect(url_for('user', username=username))
-    db.session.add(u)
-    db.session.commit()
-    flash('You have stopped following ' + username + '.')
-    return redirect(url_for('user', username=username))
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -431,4 +393,8 @@ def get_resource():
 def message_box():
     print "message!"
     return jsonify({ 'data': 'Hello, %s!' %g.user.username })
+
+@app.route('/api/v1.0/get_img', methods=['GET'])
+def get_random_img():
+    print "here!"
 

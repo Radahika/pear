@@ -114,6 +114,22 @@ class User(db.Model):
     def chore_count(self):
         return len(self.chores.all())
 
+    def uncompleted_chore_count(self):
+        chores = self.chores.all()
+        count = 0
+        for chore in chores:
+            if not chore.status:
+                count += 1
+        return count
+
+    def completed_chore_count(self):
+        return self.chore_count() - self.uncompleted_chore_count()
+
+    def get_plural_chore(self, count):
+        if len(count) == 1:
+            return "chore"
+        return "chores"
+
     def message_count(self):
         return len(self.messages.all())
 
@@ -143,6 +159,9 @@ class User(db.Model):
         task = []
         task.append({'id': chore.id, 'title': str(chore.title), 'description': str(chore.description), 'done': chore.get_status(), 'timestamp': chore.timestamp})
         return task
+
+    def chore_size(self, chore):
+        return len(chore.description)
 
     def unread_messages(self):
         unread = 0

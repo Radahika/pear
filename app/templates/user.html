@@ -5,10 +5,11 @@
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='assets/css/style-responsive.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/user.css') }}" rel="stylesheet">
 
     <script src="{{ url_for('static', filename='assets/js/chart-master/Chart.js') }}"></script>
 
-<h1>Hello {{ user.username }}!</h1>
+<h1 class="intro">Hello {{ user.username.title() }}!</h1>
     <div class="row">
               <div class="col-lg-9 main-chart">
                 <div class="row mtbox">
