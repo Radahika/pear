@@ -62,7 +62,7 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <i class="fa fa-tasks"></i>
                             {% if user.chore_count() > 0 %}
-                            <span class="badge bg-theme">
+                            <span class="badge bg-theme" id="inbox_count">
                               {{ user.chore_count() }}
                             </span>
                             {% endif %}

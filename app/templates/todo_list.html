@@ -1,22 +1,14 @@
         {% extends "base.html" %}
-    <!-- js placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='assets/js/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery-ui-1.9.2.custom.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery.ui.touch-punch.min.js') }}"></script>
-    <script class="include" type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dcjqaccordion.2.7.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery.scrollTo.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/jquery.nicescroll.js') }}" type="text/javascript"></script>
-        <script>window.jQuery || document.write('<script src="{{
+    <script>window.jQuery || document.write('<script src="{{
           url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
         {% block content %}
-        <h3><i class="fa fa-angle-right"></i> To-Do Lists</h3>
+        <h3><i class="fa fa-angle-right"></i> Help Keep Your House Clean!</h3>
 	      <!-- COMPLEX TO DO LIST -->
               <div class="row mt">
                   <div class="col-md-12">
                       <section class="task-panel tasks-widget">
 	                	<div class="panel-heading">
-	                        <div class="pull-left"><h5><i class="fa fa-tasks"></i> Todo List - Complex Style</h5></div>
+	                        <div class="pull-left"><h5><i class="fa fa-tasks"></i> Todo List - Your Chores</h5></div>
 	                        <br>
 	                 	</div>
                           <div class="panel-body">
@@ -32,11 +24,13 @@
                                             <span class="task-title-sp"><b>{{ chore.title }}</b></span>
                                             {% if chore.get_status() == "Done" %}
                                                 <span class="badge bg-theme" id="{{ chore.id }}" >{{ chore.get_status() }}</span>
+                                                <div class="pull-right hidden-phone">
+                                                  <button class="btn btn-warning btn-xs check" data-choreid="{{ chore.id }}" id="check{{ chore.id }}"><i id="fa{{ chore.id }}" class="fa fa-times"></i></button>
                                             {% else %}
                                                 <span class="badge bg-important" id="{{ chore.id }}" >{{ chore.get_status() }}</span>
+                                                <div class="pull-right hidden-phone">
+                                                  <button class="btn btn-success btn-xs check" data-choreid="{{ chore.id }}" id="check{{ chore.id }}"><i id="fa{{ chore.id }}" class="fa fa-check"></i></button>
                                             {% endif %}
-                                              <div class="pull-right hidden-phone">
-                                                <button class="btn btn-success btn-xs check" data-choreid="{{ chore.id }}"><i class=" fa fa-check"></i></button>
                                                   <button class="btn btn-primary btn-xs edit" data-choreid="{{ chore.id }}"><i class="fa fa-pencil"></i></button>
                                                   <button class="btn btn-danger btn-xs delete" data-choreid="{{ chore.id }}"><i class="fa fa-trash-o "></i></button>
                                               </div>
@@ -150,6 +144,13 @@
                 };
                 return $.ajax(request);
             }
+        setInboxCount = function(num) {
+            var count = Number($("#inbox_count").text());
+            if ((count + num) > 0)
+                $("#inbox_count").text((count + num).toString());
+            else
+                $("#inbox_count").text("");
+        }
 
         $("#addbutton").click(function() {
             var options = { "backdrop" : "true" };
@@ -161,7 +162,6 @@
                   var task = data.task[0];
                   var template = $("#choreTemplate").html();
                   Mustache.parse(template);
-                  console.log(task.id, task.done);
                   $(task.id).addClass("bg-important");
                   complete = false;
                   if (task.done == "Done") {
@@ -170,6 +170,7 @@
                   var rendered = Mustache.render(template, {"id": task.id, "title": task.title, "status": task.done, "description": task.description, "complete": complete});
                   $(".task-list").prepend(rendered);
                   $("#basicModal").modal('hide');
+                  setInboxCount(+1);
             };
             ajax(tasksURI, "POST", data, onSuccess);
             });
@@ -189,41 +190,29 @@
                 var template = $("#choreTemplate").html();
                 Mustache.parse(template);
             }
+            setInboxCount(-1);
           };
           $("#deletebutton").click(function() {
               ajax(task_url, "DELETE", "", onSuccess);
           });
       });
-/*          $("#deletebutton").click(function() {
-              $.ajax(task_url,  {
-                url: task_url,
-                type: "DELETE",
-                contentType: "application/json",
-                accepts: "application/json",
-                cache: false,
-                dataType: 'json',
-                success: function(data) {
-                    var selector = "[data-choreid=" + chore_id + "]";
-                    $(selector).hide();
-                    var result = data.result;
-                    $("#deleteModal").modal('hide');
-                    if (result) {
-                        var template = $("#choreTemplate").html();
-                        Mustache.parse(template);
-                    }
-                }
-            });
-            */
 
         $(".check").click(function() {
-            var chore_id = $(this).data("choreid");
-            var task_url = tasksURI + "/" + chore_id;
-            chore_id = '#' + chore_id;
+            var chore_num = $(this).data("choreid");
+            var task_url = tasksURI + "/" + chore_num;
+            chore_id = '#' + chore_num;
             var result = $(chore_id).text() == "Done" ? false : true;
             var data = {'done': result};
             function onSuccess(data) {
                 var task = data.task[0];
                 $(chore_id).toggleClass('bg-important bg-theme');
+
+                var fa_selector = "#fa" + chore_num;
+                $(fa_selector).toggleClass('fa-check fa-times');
+
+                var check_selector = "#check" + chore_num;
+                $(check_selector).toggleClass('btn-success btn-warning');
+
                 var text = $(chore_id).text();
                 $(chore_id).text(task.done);
             };
@@ -244,13 +233,18 @@
         <span class="task-title-sp"><b>{{ title }}</b></span>
         {{#complete}}
             <span class="badge bg-theme">{{ status }}</span>
+            <div class="pull-right hidden-phone">
+            <button class="btn btn-warning btn-xs check" data-choreid={{ id }} id="check{{ id }}"><i id="fa{{ id }}" class="fa fa-times"></i></button>
         {{/complete}}
+        {{^complete}}
             <span class="badge bg-important">{{ status }}</span>
-        <div class="pull-right hidden-phone">
-          <button class="btn btn-success btn-xs check" data-choreid={{ id }}><i class=" fa fa-check"></i></button>
+            <div class="pull-right hidden-phone">
+            <button class="btn btn-success btn-xs check" data-choreid={{ id }}  id="check{{ id }}"><i id="fa{{ id }}" class="fa fa-check"></i></button>
+        {{/complete}}
           <button class="btn btn-primary btn-xs edit" data-choreid={{ id }}><i class="fa fa-pencil"></i></button>
-          <button class="btn btn-danger btn-xs delete" data-choreid={{ id }}><i class="fa fa-trash-o "></i></button>
+          <button class="btn btn-danger btn-xs delete" data-choreid={{ id }}><i class="fa fa-trash-o"></i></button>
         </div>
+
       </div>
       <div class="task-description">
         <span class="task-desciption-sp">{{ description }}</span>
