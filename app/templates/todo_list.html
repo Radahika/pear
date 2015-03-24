@@ -144,6 +144,9 @@
                 };
                 return $.ajax(request);
             }
+        console.log("HERE");
+        ajax($SCRIPT_ROOT + "/api/v1.0/get_img", 'GET');
+
         setInboxCount = function(num) {
             var count = Number($("#inbox_count").text());
             if ((count + num) > 0)
