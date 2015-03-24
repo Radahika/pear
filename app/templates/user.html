@@ -8,45 +8,52 @@
 
     <script src="{{ url_for('static', filename='assets/js/chart-master/Chart.js') }}"></script>
 
-<h1>User: {{ user.username }}!</h1>
-<p> Don't you have chores to do? </p>
+<h1>Hello {{ user.username }}!</h1>
     <div class="row">
               <div class="col-lg-9 main-chart">
                 <div class="row mtbox">
                   <div class="col-md-2 col-sm-2 col-md-offset-1 box0">
                     <div class="box1">
-              <span class="li_heart"></span>
-              <h3>933</h3>
+              <span class="li_camera"></span>
+              <h3>51</h3>
                     </div>
-              <p>933 People liked your page the last 24hs. Whoohoo!</p>
+              <p>51 Family photos have been uploaded! Keep making new memories!</p>
                   </div>
                   <div class="col-md-2 col-sm-2 box0">
                     <div class="box1">
-              <span class="li_cloud"></span>
-              <h3>+48</h3>
+              <span class="li_calendar"></span>
+              <h3>5</h3>
                     </div>
-              <p>48 New files were added in your cloud storage.</p>
+                <p> 5 events coming up this week!</p>
                   </div>
                   <div class="col-md-2 col-sm-2 box0">
                     <div class="box1">
               <span class="li_stack"></span>
-              <h3>23</h3>
+              <h3>{{ user.unread_messages() }}</h3>
                     </div>
-              <p>You have 23 unread messages in your inbox.</p>
+                    {% if user.unread_messages() != 1 %}
+                        <p>You have {{ user.unread_messages() }} unread messages in your inbox.</p>
+                    {% else %}
+                        <p>You have {{ user.unread_messages() }} unread message in your inbox.</p>
+                    {% endif %}
                   </div>
                   <div class="col-md-2 col-sm-2 box0">
                     <div class="box1">
-              <span class="li_news"></span>
-              <h3>+10</h3>
+              <span class="li_trash"></span>
+              <h3>{{ user.uncompleted_chore_count() }}</h3>
                     </div>
-              <p>More than 10 news were added in your reader.</p>
+                    {% if user.uncompleted_chore_count() != 1 %}
+                        <p>You have {{ user.uncompleted_chore_count() }} chores left to do!
+                    {% else %}
+                        <p>You have {{ user.uncompleted_chore_count() }} chore left to do!
+                    {% endif %}
                   </div>
                   <div class="col-md-2 col-sm-2 box0">
                     <div class="box1">
-              <span class="li_data"></span>
+              <span class="li_banknote"></span>
               <h3>OK!</h3>
                     </div>
-              <p>Your server is working perfectly. Relax & enjoy.</p>
+              <p>You are up to date on your bills.</p>
                   </div>
                 </div><!-- /row mt -->
                   <div class="row mt">

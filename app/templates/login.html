@@ -19,7 +19,6 @@
     </div>
   <hgroup>
     <div class="container">
-    {% include 'flash.html' %}
       <div id="login">
 
         <h2><span class="fontawesome-lock"></span>Sign In</h2>
@@ -27,6 +26,7 @@
         <form action="#" method="POST">
 
           <fieldset>
+    {% include 'flash.html' %}
 
             <p><label for="username">Username</label></p>
             <p><input type="username" id="username" name="username" value="" placeholder="username" data-required="required"></p>

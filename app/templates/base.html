@@ -20,6 +20,10 @@
     <link href="{{ url_for('static', filename='css/home_style.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/to-do.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/zabuto_calendar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/js/gritter/css/jquery.gritter.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/lineicons/style.css') }}">
+
 
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="{{ url_for('static', filename='assets/js/jquery.js') }}"></script>
@@ -61,9 +65,9 @@
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <i class="fa fa-tasks"></i>
-                            {% if user.chore_count() > 0 %}
+                            {% if user.uncompleted_chore_count() > 0 %}
                             <span class="badge bg-theme" id="inbox_count">
-                              {{ user.chore_count() }}
+                              {{ user.uncompleted_chore_count() }}
                             </span>
                             {% endif %}
                         </a>
@@ -133,7 +137,6 @@
                     <!-- inbox dropdown start-->
                     <li id="header_inbox_bar" class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-
                             <i class="fa fa-envelope-o" id="badge"></i>
                              {% if user.unread_messages() > 0 %}
                             <span class="badge bg-theme">
@@ -293,31 +296,25 @@
     <!--common script for all pages-->
     <script src="{{ url_for('static', filename='assets/js/common-scripts.js') }}"></script>
 
-    <!--script for this page-->
-  <!--<script>-->
-      <!--//custom select box-->
-      <!--$(function(){-->
-          <!--$('select.styled').customSelect();-->
-      <!--});-->
-  <!--</script>-->
-
   <script type=text/javascript>
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
 
   <script>
-    $("#badge").click(function() {
-        alert("CLICK")
-        $.ajax($SCRIPT_ROOT + "/api/v1.0/message_box", {
-          type: "GET",
-          contentType: "application/json; charset=utf-8",
-          data: {
-            format: 'json'
-            },
-          error: function() {
-            $('#info').html('<p>An error has occurred</p>');
-            },
-          dataType: 'jsonp',
+    $(document).ready(function() {
+      $("#badge").click(function() {
+          alert("CLICK")
+          $.ajax($SCRIPT_ROOT + "/api/v1.0/message_box", {
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            data: {
+              format: 'json'
+              },
+            error: function() {
+              $('#info').html('<p>An error has occurred</p>');
+              },
+            dataType: 'jsonp',
+            });
           });
     });
   </script>
