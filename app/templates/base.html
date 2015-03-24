@@ -82,8 +82,8 @@
                                     <div class="task-info">
                                       <div class="desc">{{ chore.title }}</div>
                                       <div class="percent">{{ chore.get_status() }}</div>
-                                      {% if user.chore_size(chore) > 23 %}
-                                        <div class="description">{{ chore.description[:23] }}...</div>
+                                      {% if user.chore_size(chore) > 25 %}
+                                        <div class="description">{{ chore.description[:25] }}...</div>
                                       {% else %}
                                         <div class="description">{{ chore.description }}</div>
                                       {% endif %}
@@ -92,7 +92,7 @@
                             </li>
                             {% endfor %}
                             <li class="external">
-                                <a href="#">See All Tasks</a>
+                            <a href="{{ url_for('chores') }}">See All Tasks</a>
                             </li>
                         </ul>
                     </li>

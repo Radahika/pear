@@ -194,7 +194,6 @@ class Chore(db.Model):
             return 'Done'
         return 'In Progress'
 
-
     def __repr__(self):
         return '<Chore %r, Complete: %r>' % (self.title, self.get_status())
 
